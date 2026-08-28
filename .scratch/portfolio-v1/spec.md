@@ -212,15 +212,19 @@ Content schema validity is enforced by the Zod collection schema at build time, 
 - **The resume exists**, as `Jitheswar_Resume.docx`, converted cleanly to PDF. It is **not yet in the repository**, pending the redaction decision below.
 - **The public contact address is `2420030078cse@gmail.com`**, the offers address. The personal address does not appear on the site.
 
-### Open decisions carried out of the resume
+### Resume, resolved
 
-These are not blockers for most tickets, but the resume cell cannot ship until the first is settled.
+The resume was edited to match this spec. `Jitheswar_Resume.ORIGINAL.docx` is kept as the pre-edit copy.
 
-- **The resume carries a personal phone number.** Publishing the PDF as-is publishes it permanently and to scrapers. A redacted variant for the site, with the phone kept in the version sent directly to employers, is the usual resolution.
-- **The resume lists `jitheswaredu@gmail.com`**, the personal address, while offers should go to `2420030078cse@gmail.com`. The document itself needs correcting, independently of this site.
-- **The resume and the site disagree about which work matters.** The resume leads with Ayur-Ai, the medical imaging classifiers, ruralAI, and malaria detection, all of which this spec cuts, and does not mention Liquid Glass, SIH26038, or Contextual Priority, three of the four Case Studies. A Primary Reader who reads both will notice. Aligning the resume to the selection is out of scope here but should follow.
-- **HerbRAG**, described in the resume as an ongoing extension of the DigiClinics work into hybrid BM25 and dense retrieval, has no public repository and therefore no entry. It becomes a Card or a Case Study when it is published.
-- **Graduation is 2028**, per the resume. Any copy implying a nearer date is wrong.
+- **Phone number removed.** The published PDF carries no phone. It reaches employers through the contact address instead.
+- **Contact address corrected** to `2420030078cse@gmail.com`, matching the site.
+- **Projects replaced with this spec's selection**, in the same order: Liquid Glass, SIH26038, Agent Spend Policy Engine, Contextual Priority Platform, NIDS, Resume Screening and Ranking. Resume and site now describe the same person.
+- **HerbRAG and Ayur-Ai are the same project**, merged into a single entry under Additional. The DigiClinics internship bullet already carries its technical substance, so it is not duplicated as a headline project.
+- **Skills extended** to back the new selection: MATLAB and Shell as languages, model calibration, Kubernetes, and container vulnerability triage.
+- **Graduation is 2028**, confirmed. Any copy implying a nearer date is wrong.
+- Three copy defects fixed: the employer and dates ran together, `llmi-powered` was a typo, and a separator was missing in the Ayur-Ai line.
+
+The PDF is still outside the repository. It is placed by the ticket that builds the Contact cell, at a stable path.
 
 ### Primary sources
 
