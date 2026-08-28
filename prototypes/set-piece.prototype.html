@@ -1,0 +1,428 @@
+<!doctype html>
+<!--
+  PROTOTYPE - THROWAWAY. Not production code, no tests, no error handling.
+
+  Question: what is the hero Set-Piece, and what is the Restrained Clay recipe
+  (shadow stack, radius scale, palette values)?
+
+  Three structurally different variants on one route, switchable via ?variant=.
+    A - Sampled : palette derived live from a source image. Hero dominated by the source.
+    B - Desk    : hero is a play area holding throwable clay objects.
+    C - Slab    : no hero at all. The grid IS the page, one sheet, one moving light.
+
+  Run:  python3 -m http.server 8000   then open http://localhost:8000/prototypes/set-piece.prototype.html
+  Fonts come from Google here for speed of judging; production self-hosts them (ADR-0001).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Set-Piece prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#E4D8C8; --surface:#EDE2D4; --ink:#2E241C; --muted:#7C6B59; --accent:#B85C38;
+  --shadow:rgba(122,96,68,.42); --light:rgba(255,251,244,.9);
+  --r:28px; --r-sm:16px; --r-lg:40px;
+  --carve:#6A5340;
+  --sx:9px; --sy:9px;          /* light direction, variant C moves these */
+  --dur:.42s; --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--ground); color:var(--ink);
+  font:400 16px/1.6 Inter,ui-sans-serif,system-ui,sans-serif;
+  padding:28px 20px 120px; min-height:100vh;
+  transition:background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+h1,h2,h3,.display{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.02em;line-height:1.08}
+
+/* ---------- the clay recipe under judgement ---------- */
+.clay{
+  background:var(--surface); border-radius:var(--r);
+  box-shadow:
+    var(--sx) var(--sy) 20px var(--shadow),
+    calc(var(--sx) * -.7) calc(var(--sy) * -.7) 16px var(--light),
+    inset 1px 1px 1px rgba(255,255,255,.6),
+    inset -1px -1px 2px rgba(122,96,68,.18);
+  transition:box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.clay.press:active,.clay.pressed{
+  box-shadow:
+    inset 5px 5px 12px var(--shadow),
+    inset -4px -4px 10px var(--light);
+  transform:scale(.985);
+}
+.deboss{
+  background:var(--surface); border-radius:var(--r);
+  box-shadow:inset 7px 7px 16px var(--shadow), inset -6px -6px 14px var(--light);
+}
+
+/* ---------- bento ---------- */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1180px;margin:0 auto}
+.cell{padding:26px;display:flex;flex-direction:column;gap:10px;min-height:172px}
+.cell.w2{grid-column:span 2} .cell.w3{grid-column:span 3} .cell.w4{grid-column:span 4}
+.cell.h2{grid-row:span 2}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.cell h3{font-size:21px}
+.cell p{font-size:14.5px;color:var(--muted)}
+.metric{font-family:Fraunces,serif;font-size:30px;font-weight:700;color:var(--accent);line-height:1}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
+.tag{font-size:11px;padding:5px 11px;border-radius:999px;background:var(--ground);color:var(--muted);
+  box-shadow:inset 2px 2px 4px var(--shadow),inset -2px -2px 4px var(--light)}
+.lede{font-size:15.5px;color:var(--muted)}
+
+/* ---------- hero shells ---------- */
+.hero{max-width:1180px;margin:0 auto 18px}
+.name{font-size:clamp(38px,6.4vw,74px)}
+.through{font-size:clamp(16px,2.1vw,22px);color:var(--muted);margin-top:12px;max-width:34ch}
+
+/* A: sampled */
+.sampled{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:stretch}
+.sampled .words{padding:44px;display:flex;flex-direction:column;justify-content:center}
+.source{padding:22px;display:flex;flex-direction:column;gap:14px}
+.canvaswrap{flex:1;border-radius:var(--r-sm);overflow:hidden;min-height:190px;
+  box-shadow:inset 4px 4px 10px var(--shadow),inset -3px -3px 8px var(--light)}
+canvas#src{width:100%;height:100%;display:block}
+.swatches{display:flex;gap:9px;flex-wrap:wrap}
+.sw{width:38px;height:38px;border:0;border-radius:12px;cursor:pointer;padding:0;
+  box-shadow:3px 3px 8px var(--shadow),-2px -2px 6px var(--light);transition:transform .18s var(--ease)}
+.sw:hover{transform:translateY(-3px)} .sw[aria-pressed="true"]{outline:2.5px solid var(--accent);outline-offset:3px}
+.derived{display:flex;gap:7px;align-items:center;font-size:11.5px;color:var(--muted)}
+.chip{width:19px;height:19px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.09)}
+
+/* B: desk */
+.desk{display:grid;grid-template-columns:.95fr 1.05fr;gap:18px}
+.desk .words{padding:44px;display:flex;flex-direction:column;justify-content:center}
+.playpen{position:relative;min-height:330px;overflow:hidden;touch-action:none;cursor:grab}
+.playpen:active{cursor:grabbing}
+.blob{position:absolute;background:var(--surface);will-change:transform;
+  box-shadow:7px 9px 18px var(--shadow),-5px -5px 14px var(--light),inset 1px 1px 2px rgba(255,255,255,.7)}
+.blob.b0{width:96px;height:96px;border-radius:50%}
+.blob.b1{width:120px;height:76px;border-radius:38px}
+.blob.b2{width:86px;height:86px;border-radius:26px;background:var(--accent)}
+.hint{position:absolute;left:22px;bottom:16px;font-size:12px;color:var(--muted);pointer-events:none}
+
+/* C: slab */
+.slab .bento{gap:16px}
+.slab .titlecell{justify-content:center;padding:40px}
+.slab .titlecell .name{color:transparent;
+  text-shadow:1px 1px 1px var(--light), -1px -1px 1px var(--shadow);
+  -webkit-text-stroke:.6px rgba(122,96,68,.28)}
+
+/* ---------- prototype chrome (deliberately not part of the design) ---------- */
+#bar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:6px;
+  background:#15110E;color:#F6EFE6;border-radius:999px;padding:7px 8px;font:500 13px/1 Inter,sans-serif;
+  box-shadow:0 10px 30px rgba(0,0,0,.35)}
+#bar button{background:#2C2521;color:inherit;border:0;border-radius:999px;padding:9px 13px;cursor:pointer;font:inherit}
+#bar button:hover{background:#3D3430}
+#bar .lbl{padding:0 12px;min-width:172px;text-align:center;font-variant-numeric:tabular-nums}
+#bar .tog[aria-pressed="true"]{background:var(--accent)}
+#fps{position:fixed;top:12px;right:12px;z-index:99;background:#15110E;color:#F6EFE6;border-radius:10px;
+  padding:7px 11px;font:600 12px/1 ui-monospace,monospace;font-variant-numeric:tabular-nums}
+@media (max-width:860px){
+  .bento{grid-template-columns:repeat(2,1fr);gap:14px}
+  .cell.w3,.cell.w4{grid-column:span 2}
+  .sampled,.desk{grid-template-columns:1fr}
+  .sampled .words,.desk .words{padding:30px}
+  .cell{padding:20px;min-height:142px}
+  #bar .lbl{min-width:126px;font-size:12px}
+}
+.carved .name{color:var(--carve);
+  text-shadow:1.5px 1.5px 0 rgba(255,255,255,.75), -1px -1px 1px var(--shadow);}
+.carvedcell{justify-content:center;padding:40px}
+.lightbtn{align-self:flex-start;margin-top:14px;font:500 12px/1 Inter,sans-serif;cursor:pointer;
+  background:var(--ground);color:var(--muted);border:0;border-radius:999px;padding:9px 14px;
+  box-shadow:inset 2px 2px 5px var(--shadow),inset -2px -2px 5px var(--light)}
+.lightbtn[aria-pressed="true"]{color:var(--surface);background:var(--accent);box-shadow:none}
+body.rm *,body.rm *::before{transition:none!important;animation:none!important}
+</style>
+</head>
+<body>
+<div id="fps">-- fps</div>
+<main id="app"></main>
+
+<nav id="bar" aria-label="Prototype variant switcher">
+  <button id="prev" aria-label="Previous variant">&larr;</button>
+  <span class="lbl" id="lbl"></span>
+  <button id="next" aria-label="Next variant">&rarr;</button>
+  <button class="tog" id="rm" aria-pressed="false" title="Simulate prefers-reduced-motion">motion off</button>
+</nav>
+
+<script>
+/* ============ content: the real thing, so variants aren't judged in a vacuum ============ */
+const HERO = {
+  name:"Jitheswar",
+  through:"I build ML and security systems that have to explain themselves.",
+};
+const DEEP = [
+  {k:"Case study", t:"Liquid Glass", m:"15 ★", p:"An Omarchy desktop theme whose palette is sampled from its own wallpaper. Blur, squircles, per-app alpha.", g:["Shell","Design","3 forks"]},
+  {k:"Case study", t:"SIH26038", m:"0.982 sens", p:"Explainable diabetic retinopathy screening. Calibrated grading, Grad-CAM checked against classical lesion evidence, sealed test set still unopened.", g:["MATLAB","PyTorch","Grad-CAM"]},
+  {k:"Case study", t:"Spend Policy Engine", m:"x402", p:"Autonomous agent spend limits enforced with real payments on Algorand testnet. Policy, not trust.", g:["Python","Algorand"]},
+  {k:"Case study", t:"Contextual Priority", m:"1000+ CVEs", p:"Re-prioritises container vulnerabilities by what the cluster is actually doing, instead of by a CVSS number that is identical everywhere.", g:["Python","K8s","EPSS"]},
+];
+const CARDS = [
+  {k:"Project", t:"NIDS", p:"Zero-trust intrusion detection. mTLS, Keycloak SSO, hash-chained audit logs.", g:["Python","Docker"]},
+  {k:"Project", t:"Resume Screening", p:"Orders candidates and explains every position. Advises, never decides.", g:["Python"]},
+];
+const el=(h)=>{const d=document.createElement('div');d.innerHTML=h.trim();return d.firstElementChild};
+const tags=g=>`<div class="tags">${g.map(x=>`<span class="tag">${x}</span>`).join('')}</div>`;
+const deepCell=(d,cls='w2')=>`<article class="cell clay press ${cls}">
+  <span class="eyebrow">${d.k}</span><h3>${d.t}</h3>
+  ${d.m?`<span class="metric">${d.m}</span>`:''}<p>${d.p}</p>${tags(d.g)}</article>`;
+const cardCell=(d)=>`<article class="cell clay press">
+  <span class="eyebrow">${d.k}</span><h3>${d.t}</h3><p>${d.p}</p>${tags(d.g)}</article>`;
+const SIDE = `
+  <article class="cell clay press w2"><span class="eyebrow">About</span><p class="lede">B.Tech CSE at KL University, Hyderabad. Five projects that all turned out to be the same idea: automated decisions that justify themselves.</p></article>
+  <article class="cell clay press"><span class="eyebrow">Now</span><p>Freezing the SIH operating point. Not opening the sealed set.</p></article>
+  <article class="cell clay press"><span class="eyebrow">Design</span><h3>2 themes</h3><p>Liquid Glass and Sadie, for Omarchy.</p></article>
+  <article class="cell clay press w2"><span class="eyebrow">Stack</span>${tags(["Python","TypeScript","PyTorch","FastAPI","Astro","K8s","MATLAB"])}</article>
+  <article class="cell clay press w2"><span class="eyebrow">Contact</span><h3>Get in touch</h3><p>jitheswaredu@gmail.com &middot; GitHub &middot; LinkedIn &middot; Resume</p></article>`;
+
+/* ============ variant A: palette sampled live from a source ============ */
+const SOURCES=[
+  ["Copper dusk",["#2B1A14","#8C3B1E","#D98E4A","#F0DCC0"]],
+  ["Oxblood",     ["#1A0F10","#6E1F26","#B0524A","#E8D3C2"]],
+  ["Moss",        ["#14180F","#3F5A32","#8FAA46","#DFE3CC"]],
+  ["Indigo",      ["#0F1220","#2B3A6B","#6E7FB8","#DCDFEE"]],
+  ["Ember",       ["#1C1108","#7A3B0B","#C97A22","#F2E2C4"]],
+  ["Slate rose",  ["#161418","#4A3A44","#9C7684","#E9DCE0"]],
+];
+function drawSource(cv,stops){
+  const c=cv.getContext('2d'),w=cv.width=360,h=cv.height=220;
+  const g=c.createLinearGradient(0,0,w,h);
+  stops.forEach((s,i)=>g.addColorStop(i/(stops.length-1),s));
+  c.fillStyle=g;c.fillRect(0,0,w,h);
+  for(let i=0;i<26;i++){                       // blobs so sampling has something to find
+    const rg=c.createRadialGradient(Math.random()*w,Math.random()*h,4,Math.random()*w,Math.random()*h,90);
+    rg.addColorStop(0,stops[(i%stops.length)]+'88');rg.addColorStop(1,'#00000000');
+    c.fillStyle=rg;c.fillRect(0,0,w,h);
+  }
+}
+function samplePalette(cv){                    // the liquid-glass mechanism, actually running
+  const c=cv.getContext('2d'),{width:w,height:h}=cv,d=c.getImageData(0,0,w,h).data,buckets=new Map();
+  for(let i=0;i<d.length;i+=4*37){
+    const r=d[i],g=d[i+1],b=d[i+2];
+    const key=`${r>>5},${g>>5},${b>>5}`;
+    const e=buckets.get(key)||[0,0,0,0];
+    e[0]+=r;e[1]+=g;e[2]+=b;e[3]++;buckets.set(key,e);
+  }
+  const list=[...buckets.values()].map(([r,g,b,n])=>{
+    const R=r/n,G=g/n,B=b/n;
+    return {rgb:[R,G,B],n,L:(.2126*R+.7152*G+.0722*B)/255,
+            S:(Math.max(R,G,B)-Math.min(R,G,B))/255};
+  }).filter(x=>x.n>3);
+  if(!list.length) return null;
+
+  const hex=([r,g,b])=>'#'+[r,g,b].map(v=>'0'.concat(Math.max(0,Math.min(255,Math.round(v))).toString(16)).slice(-2)).join('');
+  const toHsl=([r,g,b])=>{r/=255;g/=255;b/=255;
+    const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d2=mx-mn;
+    let hh=0,s=0;
+    if(d2){s=d2/(1-Math.abs(2*l-1));
+      hh=mx===r?((g-b)/d2+(g<b?6:0)):mx===g?((b-r)/d2+2):((r-g)/d2+4);hh*=60}
+    return [hh,s,l]};
+  const toRgb=([hh,s,l])=>{const cc=(1-Math.abs(2*l-1))*s,x=cc*(1-Math.abs((hh/60)%2-1)),m=l-cc/2;
+    const t2=hh<60?[cc,x,0]:hh<120?[x,cc,0]:hh<180?[0,cc,x]:hh<240?[0,x,cc]:hh<300?[x,0,cc]:[cc,0,x];
+    return t2.map(v=>(v+m)*255)};
+
+  // hue comes from the source; saturation and lightness are pinned so Restrained
+  // Clay survives any wallpaper. Sampling picks the hue, not the whole palette.
+  const pick=list.slice().sort((a,b)=>(b.S*Math.sqrt(b.n))-(a.S*Math.sqrt(a.n)))[0];
+  const hue=toHsl(pick.rgb)[0];
+  const accent =toRgb([hue,            .58, .46]);
+  const ground =toRgb([(hue+6)%360,    .26, .845]);
+  const surface=toRgb([(hue+6)%360,    .30, .893]);
+  const ink    =toRgb([(hue+340)%360,  .30, .13 ]);
+  const muted  =toRgb([(hue+2)%360,    .14, .42 ]);
+  const shTint =toRgb([hue,            .34, .34 ]);
+  const carve  =toRgb([(hue+4)%360,    .20, .34 ]);   // pinned dark enough to pass contrast
+  return {accent:hex(accent),ground:hex(ground),surface:hex(surface),ink:hex(ink),muted:hex(muted),
+          carve:hex(carve),shadow:`rgba(${shTint.map(v=>Math.round(v)).join(',')},.40)`};
+}
+function applyPalette(p){
+  if(!p)return; const s=document.documentElement.style;
+  s.setProperty('--accent',p.accent); s.setProperty('--ground',p.ground);
+  s.setProperty('--surface',p.surface); s.setProperty('--ink',p.ink);
+  s.setProperty('--muted',p.muted); s.setProperty('--shadow',p.shadow);
+  s.setProperty('--carve',p.carve);
+  const d=document.getElementById('derived');
+  if(d)d.innerHTML=`sampled &rarr; `+['ground','surface','accent','ink']
+    .map(k=>`<span class="chip" style="background:${p[k]}"></span>`).join('')+
+    ` <span style="margin-left:6px">${p.accent}</span>`;
+}
+function renderA(app){
+  app.innerHTML=`
+  <section class="hero sampled">
+    <div class="words clay"><h1 class="name display">${HERO.name}</h1><p class="through">${HERO.through}</p></div>
+    <div class="source clay">
+      <span class="eyebrow">Set-piece &mdash; the page takes its colour from this</span>
+      <div class="canvaswrap"><canvas id="src"></canvas></div>
+      <div class="swatches" id="sws"></div>
+      <div class="derived" id="derived"></div>
+    </div>
+  </section>
+  <section class="bento">
+    ${DEEP.map(d=>deepCell(d)).join('')}${SIDE}${CARDS.map(cardCell).join('')}
+  </section>`;
+  const cv=document.getElementById('src'),sws=document.getElementById('sws');
+  SOURCES.forEach(([nm,stops],i)=>{
+    const b=el(`<button class="sw" title="${nm}" aria-pressed="${i===0}"
+      style="background:linear-gradient(135deg,${stops.join(',')})"></button>`);
+    b.onclick=()=>{[...sws.children].forEach(c=>c.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');drawSource(cv,stops);applyPalette(samplePalette(cv));};
+    sws.appendChild(b);
+  });
+  drawSource(cv,SOURCES[0][1]); applyPalette(samplePalette(cv));
+}
+
+/* ============ variant B: throwable clay ============ */
+let rafB=null;
+function renderB(app){
+  app.innerHTML=`
+  <section class="hero desk">
+    <div class="words clay"><h1 class="name display">${HERO.name}</h1><p class="through">${HERO.through}</p></div>
+    <div class="playpen clay" id="pen"><span class="hint">Set-piece &mdash; drag them. Throw them.</span></div>
+  </section>
+  <section class="bento">
+    ${DEEP.map(d=>deepCell(d)).join('')}${SIDE}${CARDS.map(cardCell).join('')}
+  </section>`;
+  const pen=document.getElementById('pen');
+  const B=[0,1,2].map(i=>{
+    const n=el(`<div class="blob b${i}"></div>`);pen.appendChild(n);
+    return {n,x:60+i*112,y:56+i*44,vx:0,vy:0,w:[96,120,86][i],h:[96,76,86][i],drag:false};
+  });
+  let held=null,lx=0,ly=0,lt=0;
+  pen.addEventListener('pointerdown',e=>{
+    const r=pen.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
+    for(let i=B.length-1;i>=0;i--){const b=B[i];
+      if(px>=b.x&&px<=b.x+b.w&&py>=b.y&&py<=b.y+b.h){held=b;b.drag=true;b.vx=b.vy=0;
+        b.ox=px-b.x;b.oy=py-b.y;lx=px;ly=py;lt=performance.now();pen.setPointerCapture(e.pointerId);break;}}
+  });
+  pen.addEventListener('pointermove',e=>{
+    if(!held)return;const r=pen.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
+    held.x=px-held.ox;held.y=py-held.oy;
+    const dt=Math.max(performance.now()-lt,1);
+    held.vx=(px-lx)/dt*15;held.vy=(py-ly)/dt*15;lx=px;ly=py;lt=performance.now();
+  });
+  const drop=()=>{if(held){held.drag=false;held=null}};
+  pen.addEventListener('pointerup',drop);pen.addEventListener('pointercancel',drop);
+  (function step(){
+    const W=pen.clientWidth,H=pen.clientHeight,rm=document.body.classList.contains('rm');
+    for(const b of B){
+      if(!b.drag&&!rm){
+        b.vy+=.55; b.x+=b.vx; b.y+=b.vy; b.vx*=.992;
+        if(b.x<0){b.x=0;b.vx=Math.abs(b.vx)*.62} if(b.x+b.w>W){b.x=W-b.w;b.vx=-Math.abs(b.vx)*.62}
+        if(b.y+b.h>H){b.y=H-b.h;b.vy=-Math.abs(b.vy)*.55;b.vx*=.9;if(Math.abs(b.vy)<1.1)b.vy=0}
+        if(b.y<0){b.y=0;b.vy=Math.abs(b.vy)*.5}
+      }
+      b.n.style.transform=`translate(${b.x}px,${b.y}px)`;
+    }
+    rafB=requestAnimationFrame(step);
+  })();
+}
+
+/* ============ variant C: one sheet, one moving light ============ */
+let moveC=null;
+function renderC(app){
+  app.className='slab';
+  app.innerHTML=`<section class="bento">
+    <article class="cell deboss titlecell w2 h2"><h1 class="name display">${HERO.name}</h1><p class="through">${HERO.through}</p></article>
+    ${DEEP.map(d=>deepCell(d,'w2')).join('')}${SIDE}${CARDS.map(cardCell).join('')}
+    <article class="cell clay w4" style="min-height:80px;align-items:center;justify-content:center">
+      <p class="lede">Set-piece &mdash; move the cursor. One light source, every shadow on the page turns with it.</p></article>
+  </section>`;
+  moveC=(e)=>{
+    if(document.body.classList.contains('rm'))return;
+    const dx=(e.clientX/innerWidth-.5),dy=(e.clientY/innerHeight-.5);
+    document.documentElement.style.setProperty('--sx',(-dx*22).toFixed(1)+'px');
+    document.documentElement.style.setProperty('--sy',(-dy*22).toFixed(1)+'px');
+  };
+  addEventListener('pointermove',moveC,{passive:true});
+}
+
+/* ============ variant D: the composite - C's deboss, A's sampling ============ */
+function renderD(app){
+  app.className='carved';
+  app.innerHTML=`<section class="bento">
+    <article class="cell deboss carvedcell w2 h2">
+      <h1 class="name display">${HERO.name}</h1><p class="through">${HERO.through}</p>
+      <button class="lightbtn" id="lt" aria-pressed="false">moving light: off</button>
+    </article>
+    <article class="cell clay source w2 h2">
+      <span class="eyebrow">Set-piece &mdash; the page takes its colour from this</span>
+      <div class="canvaswrap"><canvas id="src"></canvas></div>
+      <div class="swatches" id="sws"></div>
+      <div class="derived" id="derived"></div>
+    </article>
+    ${DEEP.map(d=>deepCell(d,'w2')).join('')}${SIDE}${CARDS.map(cardCell).join('')}
+  </section>`;
+  const cv=document.getElementById('src'),sws=document.getElementById('sws');
+  SOURCES.forEach(([nm,stops],i)=>{
+    const b=el(`<button class="sw" title="${nm}" aria-pressed="${i===0}"
+      style="background:linear-gradient(135deg,${stops.join(',')})"></button>`);
+    b.onclick=()=>{[...sws.children].forEach(c=>c.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');drawSource(cv,stops);applyPalette(samplePalette(cv));};
+    sws.appendChild(b);
+  });
+  drawSource(cv,SOURCES[0][1]); applyPalette(samplePalette(cv));
+
+  const lt=document.getElementById('lt');
+  lt.onclick=()=>{
+    const on=lt.getAttribute('aria-pressed')==='false';
+    lt.setAttribute('aria-pressed',String(on)); lt.textContent='moving light: '+(on?'on':'off');
+    if(on){ moveC=(e)=>{ if(document.body.classList.contains('rm'))return;
+        const dx=(e.clientX/innerWidth-.5),dy=(e.clientY/innerHeight-.5);
+        document.documentElement.style.setProperty('--sx',(-dx*22).toFixed(1)+'px');
+        document.documentElement.style.setProperty('--sy',(-dy*22).toFixed(1)+'px');};
+      addEventListener('pointermove',moveC,{passive:true});
+    } else if(moveC){ removeEventListener('pointermove',moveC); moveC=null;
+      document.documentElement.style.setProperty('--sx','9px');
+      document.documentElement.style.setProperty('--sy','9px'); }
+  };
+}
+
+/* ============ switcher ============ */
+const V=[['D','Carved \u2605'],['A','Sampled'],['B','Desk'],['C','Slab']];
+function render(k){
+  if(rafB){cancelAnimationFrame(rafB);rafB=null}
+  if(moveC){removeEventListener('pointermove',moveC);moveC=null}
+  const app=document.getElementById('app');app.className='';
+  document.documentElement.style.cssText='';
+  ({A:renderA,B:renderB,C:renderC,D:renderD}[k])(app);
+  document.getElementById('lbl').textContent=`${k} (${V.find(v=>v[0]===k)[1]})`;
+}
+function current(){
+  const q=new URLSearchParams(location.search).get('variant');
+  const h=location.hash.replace('#','');
+  return V.some(v=>v[0]===q)?q:(V.some(v=>v[0]===h)?h:'D');
+}
+function go(k){
+  try{const u=new URL(location);u.searchParams.set('variant',k);history.replaceState({},'',u)}
+  catch(_){location.hash=k}
+  render(k);
+}
+const cycle=d=>{const i=V.findIndex(v=>v[0]===current());go(V[(i+d+V.length)%V.length][0])};
+document.getElementById('prev').onclick=()=>cycle(-1);
+document.getElementById('next').onclick=()=>cycle(1);
+addEventListener('keydown',e=>{
+  if(/^(INPUT|TEXTAREA)$/.test(e.target.tagName)||e.target.isContentEditable)return;
+  if(e.key==='ArrowLeft')cycle(-1); if(e.key==='ArrowRight')cycle(1);
+});
+const rmBtn=document.getElementById('rm');
+rmBtn.onclick=()=>{const on=document.body.classList.toggle('rm');
+  rmBtn.setAttribute('aria-pressed',String(on));rmBtn.textContent=on?'motion ON':'motion off'};
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)rmBtn.click();
+
+/* fps, because the Practical Floor is the governing constraint */
+let f=0,t0=performance.now();
+(function tick(){f++;const n=performance.now();
+  if(n-t0>=500){document.getElementById('fps').textContent=Math.round(f*1000/(n-t0))+' fps';f=0;t0=n}
+  requestAnimationFrame(tick)})();
+
+render(current());
+</script>
+</body>
+</html>
