@@ -11,6 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:floor:bundle": "node scripts/floor/bundle-size.mjs",
     "test:floor:lighthouse": "node scripts/floor/lighthouse.mjs",
     "test:floor:e2e": "playwright test",
@@ -30,6 +32,7 @@
     "lighthouse": "^13.4.1",
     "serve": "^14.2.6",
     "start-server-and-test": "^3.0.12",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
   }
 }
