@@ -17,7 +17,9 @@
     "test:floor": "npm run test:floor:bundle && start-server-and-test \"serve dist -l 4322 -n\" http://localhost:4322 \"npm run test:floor:lighthouse && npm run test:floor:e2e\""
   },
   "dependencies": {
-    "astro": "^7.2.9"
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.9",
+    "tailwindcss": "^4.3.3"
   },
   "allowScripts": {
     "esbuild": true

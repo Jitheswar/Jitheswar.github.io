@@ -1,5 +1,7 @@
 ---
-const heroLine = "I build systems, then defend every decision in them under questioning.";
+import '../styles/global.css';
+
+const heroLine = 'I build systems, then defend every decision in them under questioning.';
 ---
 
 <html lang="en">
@@ -9,11 +11,19 @@ const heroLine = "I build systems, then defend every decision in them under ques
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
+		<link rel="preload" href="/fonts/fraunces-variable-latin.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/inter-variable-latin.woff2" as="font" type="font/woff2" crossorigin />
 		<title>Jitheswar</title>
 	</head>
-	<body>
-		<main>
-			<h1>{heroLine}</h1>
+	<body class="min-h-screen bg-ground font-text text-ink">
+		<main class="flex items-center justify-center p-6">
+			<div class="clay flex max-w-xl flex-col items-start gap-6 p-10">
+				<h1 class="carve font-display text-4xl font-semibold sm:text-5xl">Jitheswar</h1>
+				<p class="text-lg text-ink sm:text-xl">{heroLine}</p>
+				<a href="https://github.com/Jitheswar" class="clay clay-pressable text-base font-medium px-5 py-3">
+					GitHub
+				</a>
+			</div>
 		</main>
 	</body>
 </html>

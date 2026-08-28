@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+
+/*
+ * Restrained Clay token contract: ground, surface, ink, muted, accent, carve, shadow.
+ * This is the exact set derivePalette (ticket 04) emits, so the names below are the
+ * interface between the two. Values here are the static default: hue 22 (copper), the
+ * warm Source from the set-piece prototype (docs/adr/0002-set-piece-samples-hue-only.md).
+ * Saturation and lightness are pinned per that ADR and must not drift when the Set-Piece
+ * (ticket 07) starts overriding hue at runtime via custom properties on :root.
+ */
+@theme {
+	/* Ground-to-surface lightness gap: 89.3% - 84.5% = 4.8 points. This is what makes the
+	 * extrusion read; narrowing it flattens surface back into ground. */
+	--color-ground: hsl(28 26% 84.5%);
+	--color-surface: hsl(28 30% 89.3%);
+	--color-ink: hsl(2 30% 13%);
+	--color-muted: hsl(24 14% 42%);
+	--color-accent: hsl(22 58% 46%);
+	--color-carve: hsl(26 20% 34%);
+	--color-shadow: hsl(28 35% 62%);
+
+	--font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+	--font-text: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Self-hosted, subset (Latin, weight-axis-only) variable fonts. No third-party font
+ * origin, per docs/adr/0001-practical-floor.md. Files under public/fonts/, sourced from
+ * the OFL-licensed Fontsource builds (licenses kept alongside as *-LICENSE.txt).
+ */
+@font-face {
+	font-family: 'Fraunces Variable';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('/fonts/fraunces-variable-latin.woff2') format('woff2-variations');
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+		U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Inter Variable';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('/fonts/inter-variable-latin.woff2') format('woff2-variations');
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+		U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+ * The clay treatment: one reusable surface, not repeated per component. Dual outer
+ * shadow (dark and light) reads as extruded from ground; dual inner shadow (highlight
+ * and shadow) gives the surface itself a soft bevel at rest.
+ */
+@utility clay {
+	background-color: var(--color-surface);
+	border-radius: 1.75rem;
+	box-shadow:
+		0.6rem 0.6rem 1.4rem color-mix(in srgb, var(--color-shadow) 55%, transparent),
+		-0.5rem -0.5rem 1.1rem color-mix(in srgb, white 75%, transparent),
+		inset 0.09rem 0.09rem 0.2rem color-mix(in srgb, white 60%, transparent),
+		inset -0.09rem -0.09rem 0.2rem color-mix(in srgb, var(--color-shadow) 30%, transparent);
+}
+
+/* Reduced motion is honoured: no transition exists at all unless the reader allows it. */
+@media (prefers-reduced-motion: no-preference) {
+	.clay {
+		transition:
+			box-shadow 180ms ease,
+			transform 180ms ease;
+	}
+}
+
+/*
+ * Applied alongside `clay` on real interactive elements only, so a reader clicking
+ * inside a static clay panel never sees it "press". Pressed deforms inward: the outer
+ * shadow that reads as extrusion retracts, and the inner shadow inverts and deepens,
+ * so the surface reads as pushed into the sheet rather than merely darkened.
+ */
+@utility clay-pressable {
+	&:active {
+		transform: translateY(0.1rem) scale(0.99);
+		box-shadow:
+			0.15rem 0.15rem 0.35rem color-mix(in srgb, var(--color-shadow) 40%, transparent),
+			inset 0.2rem 0.2rem 0.4rem color-mix(in srgb, var(--color-shadow) 55%, transparent),
+			inset -0.15rem -0.15rem 0.3rem color-mix(in srgb, white 45%, transparent);
+	}
+
+	&:focus-visible {
+		outline: 0.15rem solid var(--color-accent);
+		outline-offset: 0.2rem;
+	}
+}
+
+/*
+ * Carve: the name treatment, pressed into the sheet. `color` alone is an opaque,
+ * real ink colour measured at 4.5:1+ against surface (5.61:1 at the default hue), so
+ * the text is legible with the text-shadow removed entirely. The text-shadow is a
+ * texture layered on top, never the sole carrier of the letterforms.
+ */
+@utility carve {
+	color: var(--color-carve);
+	text-shadow:
+		-0.03em -0.03em 0.01em color-mix(in srgb, var(--color-shadow) 70%, black 15%),
+		0.03em 0.03em 0.01em color-mix(in srgb, white 80%, transparent);
+}
