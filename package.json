@@ -9,12 +9,25 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "typecheck": "tsc --noEmit",
+    "test:floor:bundle": "node scripts/floor/bundle-size.mjs",
+    "test:floor:lighthouse": "node scripts/floor/lighthouse.mjs",
+    "test:floor:e2e": "playwright test",
+    "test:floor": "npm run test:floor:bundle && start-server-and-test \"serve dist -l 4322 -n\" http://localhost:4322 \"npm run test:floor:lighthouse && npm run test:floor:e2e\""
   },
   "dependencies": {
     "astro": "^7.2.9"
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "chrome-launcher": "^1.2.1",
+    "lighthouse": "^13.4.1",
+    "serve": "^14.2.6",
+    "start-server-and-test": "^3.0.12",
+    "typescript": "^6.0.3"
   }
 }
