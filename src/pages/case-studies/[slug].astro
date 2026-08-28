@@ -1,0 +1,85 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+	const caseStudies = await getCollection('caseStudies');
+	return caseStudies.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry },
+	}));
+}
+
+interface Props {
+	entry: CollectionEntry<'caseStudies'>;
+}
+
+const { entry } = Astro.props;
+const {
+	title,
+	claim,
+	headlineMetric,
+	problem,
+	constraint,
+	decision,
+	rejectedAlternative,
+	honestLimits,
+	sourceUrl,
+	tags,
+} = entry.data;
+
+// The five beats, in the fixed order every Case Study shares, so a reader
+// who has read one already knows where to look in the next.
+const beats = [
+	{ heading: 'The problem', body: problem },
+	{ heading: 'The constraint', body: constraint },
+	{ heading: 'The decision', body: decision },
+	{ heading: 'The rejected alternative', body: rejectedAlternative },
+	{ heading: 'Honest limits', body: honestLimits },
+];
+
+const paragraphsOf = (text: string) =>
+	text
+		.split('\n\n')
+		.map((paragraph) => paragraph.trim())
+		.filter(Boolean);
+---
+
+<BaseLayout title={`${title} - Jitheswar`}>
+	<main class="mx-auto max-w-2xl p-6 sm:p-10">
+		<a href="/" class="clay clay-pressable inline-block text-sm font-medium px-4 py-2">Back to Jitheswar</a>
+
+		<article class="clay mt-6 flex flex-col gap-8 p-8 sm:p-12">
+			<header class="flex flex-col gap-3">
+				<h1 class="carve font-display text-4xl font-semibold sm:text-5xl">{title}</h1>
+				<p class="text-lg text-ink sm:text-xl">{claim}</p>
+				{headlineMetric && <p class="text-base font-medium text-ink">{headlineMetric}</p>}
+				<ul class="flex list-none flex-wrap gap-2 p-0">
+					{
+						tags.map((tag) => (
+							<li class="clay px-3 py-1 text-sm text-ink">{tag}</li>
+						))
+					}
+				</ul>
+			</header>
+
+			{
+				beats.map(({ heading, body }) => (
+					<section class="flex flex-col gap-2">
+						<h2 class="carve font-display text-xl font-semibold">{heading}</h2>
+						{paragraphsOf(body).map((paragraph) => (
+							<p class="text-base text-ink">{paragraph}</p>
+						))}
+					</section>
+				))
+			}
+
+			<a
+				href={sourceUrl}
+				class="clay clay-pressable self-start text-base font-medium px-5 py-3"
+			>
+				View the source
+			</a>
+		</article>
+	</main>
+</BaseLayout>
