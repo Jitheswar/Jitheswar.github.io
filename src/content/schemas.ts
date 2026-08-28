@@ -41,3 +41,75 @@ export const sourceSchema = z.object({
 	image: z.string(),
 	order: z.number(),
 });
+
+/**
+ * The seven non-project cells: everything on the landing page that is not a
+ * Case Study or a Card. One collection, one schema per cell discriminated on
+ * `cell`, so each keeps its own required shape (a missing Experience metric
+ * fails the build the same way a missing Case Study beat does) while still
+ * living together as ordinary content files an author edits directly.
+ */
+export const heroCellSchema = z.object({
+	cell: z.literal('hero'),
+	name: z.string(),
+	line: z.string(),
+	ctaLabel: z.string(),
+	ctaHref: z.string().url(),
+});
+
+export const aboutCellSchema = z.object({
+	cell: z.literal('about'),
+	text: z.string(),
+});
+
+export const experienceCellSchema = z.object({
+	cell: z.literal('experience'),
+	role: z.string(),
+	employer: z.string(),
+	dates: z.string(),
+	summary: z.string(),
+	metric: z.string(),
+});
+
+export const nowCellSchema = z.object({
+	cell: z.literal('now'),
+	text: z.string(),
+});
+
+export const designCellSchema = z.object({
+	cell: z.literal('design'),
+	intro: z.string(),
+	themes: z
+		.array(
+			z.object({
+				name: z.string(),
+				description: z.string(),
+			}),
+		)
+		.length(2),
+});
+
+export const stackCellSchema = z.object({
+	cell: z.literal('stack'),
+	items: z.array(z.string()),
+});
+
+export const contactCellSchema = z.object({
+	cell: z.literal('contact'),
+	email: z.string().email(),
+	github: z.string().url(),
+	linkedin: z.string().url(),
+	resumeHref: z.string(),
+});
+
+export const siteCellSchema = z.discriminatedUnion('cell', [
+	heroCellSchema,
+	aboutCellSchema,
+	experienceCellSchema,
+	nowCellSchema,
+	designCellSchema,
+	stackCellSchema,
+	contactCellSchema,
+]);
+
+export type SiteCell = z.infer<typeof siteCellSchema>;

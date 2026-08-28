@@ -2,14 +2,28 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SetPiece from '../components/SetPiece.tsx';
-
-const heroLine = 'I build systems, then defend every decision in them under questioning.';
+import type { SiteCell } from '../content/schemas';
 
 const caseStudies = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order);
 const cards = (await getCollection('cards')).sort((a, b) => a.data.order - b.data.order);
 const sources = (await getCollection('sources'))
 	.sort((a, b) => a.data.order - b.data.order)
 	.map((entry) => ({ id: entry.id, label: entry.data.label, image: entry.data.image }));
+
+const siteCells = await getCollection('site');
+function cellData<T extends SiteCell['cell']>(cell: T): Extract<SiteCell, { cell: T }> {
+	const entry = siteCells.find((e) => e.data.cell === cell);
+	if (!entry) throw new Error(`Missing site cell: ${cell}`);
+	return entry.data as Extract<SiteCell, { cell: T }>;
+}
+
+const hero = cellData('hero');
+const about = cellData('about');
+const experience = cellData('experience');
+const now = cellData('now');
+const design = cellData('design');
+const stack = cellData('stack');
+const contact = cellData('contact');
 ---
 
 <BaseLayout title="Jitheswar">
@@ -19,19 +33,17 @@ const sources = (await getCollection('sources'))
 				data-bento-cell
 				class="clay col-span-2 row-span-1 flex flex-col items-start justify-center gap-6 p-10 md:col-span-2 md:row-span-2"
 			>
-				<h1 class="carve font-display text-4xl font-semibold sm:text-5xl">Jitheswar</h1>
-				<p class="text-lg text-ink sm:text-xl">{heroLine}</p>
-				<a href="https://github.com/Jitheswar" class="clay clay-pressable text-base font-medium px-5 py-3">
-					GitHub
+				<h1 class="carve font-display text-4xl font-semibold sm:text-5xl">{hero.name}</h1>
+				<p class="text-lg text-ink sm:text-xl">{hero.line}</p>
+				<a href={hero.ctaHref} class="clay clay-pressable text-base font-medium px-5 py-3">
+					{hero.ctaLabel}
 				</a>
 			</div>
 
 			<div data-bento-cell class="clay col-span-2 flex flex-col gap-2 p-6 md:col-span-2">
 				<h2 class="carve font-display text-xl font-semibold">Experience</h2>
 				<p class="text-base text-ink">
-					Research Software Engineer Intern, DigiClinics - Feb to Aug 2026. Built a plant and herb
-					classification pipeline combining TF-IDF retrieval with INT8 quantization for on-device inference,
-					cross-validation 0.9864.
+					{experience.role}, {experience.employer} - {experience.dates}. {experience.summary} {experience.metric}.
 				</p>
 			</div>
 
@@ -59,17 +71,27 @@ const sources = (await getCollection('sources'))
 
 			<div data-bento-cell class="clay col-span-2 flex flex-col gap-2 p-6 md:col-span-1">
 				<h2 class="carve font-display text-xl font-semibold">About</h2>
-				<p class="text-base text-ink">Computer science undergraduate, graduating 2028.</p>
+				<p class="text-base text-ink">{about.text}</p>
 			</div>
 
 			<div data-bento-cell class="clay col-span-1 flex flex-col gap-2 p-6 md:col-span-1">
 				<h2 class="carve font-display text-xl font-semibold">Now</h2>
-				<p class="text-base text-ink">Building this site.</p>
+				<p class="text-base text-ink">{now.text}</p>
 			</div>
 
-			<div data-bento-cell class="clay col-span-1 flex flex-col gap-2 p-6 md:col-span-1">
+			<div data-bento-cell class="clay col-span-1 flex flex-col gap-3 p-6 md:col-span-1">
 				<h2 class="carve font-display text-xl font-semibold">Design</h2>
-				<p class="text-base text-ink">Two Omarchy themes, presented as visual work.</p>
+				<p class="text-base text-ink">{design.intro}</p>
+				<ul class="flex list-none flex-col gap-2 p-0">
+					{
+						design.themes.map((theme) => (
+							<li class="flex flex-col gap-0.5">
+								<span class="text-sm font-medium text-ink">{theme.name}</span>
+								<p class="text-sm text-ink">{theme.description}</p>
+							</li>
+						))
+					}
+				</ul>
 			</div>
 
 			{
@@ -89,17 +111,34 @@ const sources = (await getCollection('sources'))
 
 			<div data-bento-cell class="clay col-span-2 flex flex-col gap-2 p-6 md:col-span-2">
 				<h2 class="carve font-display text-xl font-semibold">Stack</h2>
-				<p class="text-base text-ink">TypeScript, Python, Kubernetes, and more.</p>
+				<ul class="flex list-none flex-wrap gap-2 p-0">
+					{
+						stack.items.map((item) => (
+							<li class="clay px-3 py-1 text-sm text-ink">{item}</li>
+						))
+					}
+				</ul>
 			</div>
 
 			<div data-bento-cell class="clay col-span-2 flex flex-col gap-3 p-6 md:col-span-1">
 				<h2 class="carve font-display text-xl font-semibold">Contact</h2>
-				<a
-					href="mailto:2420030078cse@gmail.com"
-					class="clay clay-pressable self-start text-base font-medium px-5 py-3"
-				>
-					Email
-				</a>
+				<div class="flex flex-wrap gap-2">
+					<a
+						href={`mailto:${contact.email}`}
+						class="clay clay-pressable text-base font-medium px-5 py-3"
+					>
+						Email
+					</a>
+					<a href={contact.github} class="clay clay-pressable text-base font-medium px-5 py-3">
+						GitHub
+					</a>
+					<a href={contact.linkedin} class="clay clay-pressable text-base font-medium px-5 py-3">
+						LinkedIn
+					</a>
+					<a href={contact.resumeHref} class="clay clay-pressable text-base font-medium px-5 py-3">
+						Resume
+					</a>
+				</div>
 			</div>
 		</div>
 	</main>

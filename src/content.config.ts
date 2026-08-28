@@ -1,6 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { caseStudySchema, cardSchema, sourceSchema } from './content/schemas';
+import { caseStudySchema, cardSchema, sourceSchema, siteCellSchema } from './content/schemas';
 
 const caseStudies = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/case-studies' }),
@@ -17,4 +17,9 @@ const sources = defineCollection({
 	schema: sourceSchema,
 });
 
-export const collections = { caseStudies, cards, sources };
+const site = defineCollection({
+	loader: glob({ pattern: '**/*.md', base: './src/content/site' }),
+	schema: siteCellSchema,
+});
+
+export const collections = { caseStudies, cards, sources, site };
