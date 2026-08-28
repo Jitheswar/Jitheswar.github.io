@@ -19,8 +19,11 @@
     "test:floor": "npm run test:floor:bundle && start-server-and-test \"serve dist -l 4322 -n\" http://localhost:4322 \"npm run test:floor:lighthouse && npm run test:floor:e2e\""
   },
   "dependencies": {
+    "@astrojs/react": "^6.0.4",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.9",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "tailwindcss": "^4.3.3"
   },
   "allowScripts": {
@@ -28,6 +31,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
     "chrome-launcher": "^1.2.1",
     "lighthouse": "^13.4.1",
     "serve": "^14.2.6",

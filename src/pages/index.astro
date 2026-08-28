@@ -1,11 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SetPiece from '../components/SetPiece.tsx';
 
 const heroLine = 'I build systems, then defend every decision in them under questioning.';
 
 const caseStudies = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order);
 const cards = (await getCollection('cards')).sort((a, b) => a.data.order - b.data.order);
+const sources = (await getCollection('sources'))
+	.sort((a, b) => a.data.order - b.data.order)
+	.map((entry) => ({ id: entry.id, label: entry.data.label, image: entry.data.image }));
 ---
 
 <BaseLayout title="Jitheswar">
@@ -29,6 +33,12 @@ const cards = (await getCollection('cards')).sort((a, b) => a.data.order - b.dat
 					classification pipeline combining TF-IDF retrieval with INT8 quantization for on-device inference,
 					cross-validation 0.9864.
 				</p>
+			</div>
+
+			<div data-bento-cell class="clay col-span-2 flex flex-col gap-3 p-6 md:col-span-2">
+				<h2 class="carve font-display text-xl font-semibold">Source</h2>
+				<p class="text-base text-ink">Choose a Source and the page takes its colour from it.</p>
+				<SetPiece client:idle={{ timeout: 1000 }} sources={sources} />
 			</div>
 
 			{

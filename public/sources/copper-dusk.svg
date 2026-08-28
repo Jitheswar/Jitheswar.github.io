@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="220" viewBox="0 0 360 220">
+	<defs>
+		<linearGradient id="base-copper-dusk" x1="0%" y1="0%" x2="100%" y2="100%">
+			<stop offset="0%" stop-color="#2B1A14" /><stop offset="33.33333333333333%" stop-color="#8C3B1E" /><stop offset="66.66666666666666%" stop-color="#D98E4A" /><stop offset="100%" stop-color="#F0DCC0" />
+		</linearGradient>
+		<radialGradient id="blob-copper-dusk-0" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#2B1A14" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#2B1A14" stop-opacity="0" />
+		</radialGradient><radialGradient id="blob-copper-dusk-1" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#8C3B1E" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#8C3B1E" stop-opacity="0" />
+		</radialGradient><radialGradient id="blob-copper-dusk-2" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#D98E4A" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#D98E4A" stop-opacity="0" />
+		</radialGradient><radialGradient id="blob-copper-dusk-3" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#F0DCC0" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#F0DCC0" stop-opacity="0" />
+		</radialGradient><radialGradient id="blob-copper-dusk-4" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#2B1A14" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#2B1A14" stop-opacity="0" />
+		</radialGradient>
+	</defs>
+	<rect width="360" height="220" fill="url(#base-copper-dusk)" />
+	<circle cx="70" cy="50" r="110" fill="url(#blob-copper-dusk-0)" /><circle cx="300" cy="40" r="95" fill="url(#blob-copper-dusk-1)" /><circle cx="60" cy="180" r="100" fill="url(#blob-copper-dusk-2)" /><circle cx="250" cy="190" r="120" fill="url(#blob-copper-dusk-3)" /><circle cx="180" cy="110" r="90" fill="url(#blob-copper-dusk-4)" />
+</svg>

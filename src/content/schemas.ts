@@ -29,3 +29,15 @@ export const cardSchema = z.object({
 	tags: z.array(z.string()),
 	order: z.number(),
 });
+
+/**
+ * A Set-Piece Source: an image the palette's hue is derived from, per
+ * docs/adr/0002-set-piece-samples-hue-only.md. Thin by design, since a Source
+ * contributes a label and an image and nothing else - adding one is a content
+ * change, not a code change.
+ */
+export const sourceSchema = z.object({
+	label: z.string(),
+	image: z.string(),
+	order: z.number(),
+});

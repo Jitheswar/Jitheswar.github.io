@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="220" viewBox="0 0 360 220">
+	<defs>
+		<linearGradient id="base-moss" x1="0%" y1="0%" x2="100%" y2="100%">
+			<stop offset="0%" stop-color="#14180F" /><stop offset="33.33333333333333%" stop-color="#3F5A32" /><stop offset="66.66666666666666%" stop-color="#8FAA46" /><stop offset="100%" stop-color="#DFE3CC" />
+		</linearGradient>
+		<radialGradient id="blob-moss-0" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#14180F" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#14180F" stop-opacity="0" />
+		</radialGradient><radialGradient id="blob-moss-1" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#3F5A32" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#3F5A32" stop-opacity="0" />
+		</radialGradient><radialGradient id="blob-moss-2" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#8FAA46" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#8FAA46" stop-opacity="0" />
+		</radialGradient><radialGradient id="blob-moss-3" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#DFE3CC" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#DFE3CC" stop-opacity="0" />
+		</radialGradient><radialGradient id="blob-moss-4" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="#14180F" stop-opacity="0.55" />
+			<stop offset="100%" stop-color="#14180F" stop-opacity="0" />
+		</radialGradient>
+	</defs>
+	<rect width="360" height="220" fill="url(#base-moss)" />
+	<circle cx="70" cy="50" r="110" fill="url(#blob-moss-0)" /><circle cx="300" cy="40" r="95" fill="url(#blob-moss-1)" /><circle cx="60" cy="180" r="100" fill="url(#blob-moss-2)" /><circle cx="250" cy="190" r="120" fill="url(#blob-moss-3)" /><circle cx="180" cy="110" r="90" fill="url(#blob-moss-4)" />
+</svg>
