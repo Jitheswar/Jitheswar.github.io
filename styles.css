@@ -648,3 +648,10 @@ nav a:hover { color: var(--ink); }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
 }
+
+/* Open source: the same list as "Also built", without the divider above it */
+
+.also-plain { margin-top: 0; padding-top: 0; border-top: 0; }
+@media (min-width: 52rem) {
+  .also-plain ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
