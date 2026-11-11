@@ -295,7 +295,7 @@
     // The demo and its tile are hidden until the code has loaded, so watch the section instead.
     whenNear(nx.closest('.detail') || document.body, () => {
       const s = document.createElement('script');
-      s.src = 'nexcc-automata.js';
+      s.src = 'nexcc-automata.js?v=202611111809';
       s.onload = () => {
         nx.hidden = false;
         let timer = 0;

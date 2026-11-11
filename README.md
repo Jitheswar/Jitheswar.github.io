@@ -11,6 +11,8 @@ Plain HTML, CSS and JavaScript, with no libraries and no build step. Edit the fi
 - `demos.js`: the three in-page demos (what a page can observe, a SHA-256 hash chain, regex to DFA).
 - `nexcc-automata.js`: the automata code from [nexcc](https://github.com/Jitheswar/nexcc), wrapped for the browser. Regenerate it when that code changes.
 
+The stylesheet and scripts are loaded with a `?v=` stamp so browsers never pair a new page with an old cached file. After changing any of them, bump the stamp in `index.html` (and the one for `nexcc-automata.js` in `demos.js`).
+
 Preview locally:
 
 ```bash
