@@ -290,6 +290,17 @@ nav a:hover { color: var(--ink); }
   .has-scene #contact { padding-top: 62vh; padding-top: 62svh; }
   .has-scene .spread { padding-top: 34vh; padding-top: 34svh; }
   .has-scene .hero .stage { display: block; height: 46vh; height: 46svh; }
+  /* The "Work" heading sits where one shape is turning into the next, so it gets a card too. */
+  .chapter { padding-top: 2.5rem; }
+  .chapter > * { position: relative; }
+  .chapter::before {
+    content: "";
+    position: absolute;
+    inset: 1.4rem clamp(0.4rem, 2vw, 1.5rem) -1.1rem;
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 1.25rem;
+  }
 }
 
 /* Things rise into place the first time they are seen. */

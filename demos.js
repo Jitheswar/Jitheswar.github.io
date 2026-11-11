@@ -232,7 +232,8 @@
         const g = groups[k], a = pos[g.from], b = pos[g.to];
         let d, lx, ly;
         if (g.from === g.to) {
-          const t = n === 1 ? -Math.PI / 2 : ang[g.from];
+          // The start state's incoming arrow arrives from the left, so its own loop goes on top.
+          const t = n === 1 || g.from === dfa.start ? -Math.PI / 2 : ang[g.from];
           const p = (o, dist) => [a[0] + dist * Math.cos(t + o), a[1] + dist * Math.sin(t + o)];
           const s = p(-0.45, r), e = p(0.45, r), c1 = p(-0.6, r + 34), c2 = p(0.6, r + 34);
           d = `M${s[0]} ${s[1]}C${c1[0]} ${c1[1]} ${c2[0]} ${c2[1]} ${e[0]} ${e[1]}`;
