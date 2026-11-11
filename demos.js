@@ -292,8 +292,8 @@
       }
     };
 
-    // The demo is hidden until its code has loaded, so watch its panel instead.
-    whenNear(nx.parentElement, () => {
+    // The demo and its tile are hidden until the code has loaded, so watch the section instead.
+    whenNear(nx.closest('.detail') || document.body, () => {
       const s = document.createElement('script');
       s.src = 'nexcc-automata.js';
       s.onload = () => {

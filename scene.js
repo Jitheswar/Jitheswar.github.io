@@ -217,7 +217,7 @@
       const side = d.side || 'center';
       return {
         shape: names.indexOf(d.shape),
-        x: isWide ? (side === 'right' ? 0.46 : side === 'left' ? -0.46 : 0) : 0,
+        x: !isWide ? 0 : d.x != null ? parseFloat(d.x) : side === 'right' ? 0.46 : side === 'left' ? -0.46 : 0,
         y: isWide ? parseFloat(d.y || 0) : parseFloat(d.yM || 0),
         alpha: isWide ? parseFloat(d.dim || 1) : parseFloat(d.dimM || d.dim || 1),
         accent: hex(d.accent),
@@ -427,7 +427,7 @@
     const scale = isWide ? Math.min(1.05, 0.64 * aspect) : Math.min(1, 1.18 * aspect);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.uniform1f(U.uT, t);
+    gl.uniform1f(U.uT, A.shape === B.shape ? 0 : t); // same object on both sides: only position and brightness change
     gl.uniform1f(U.uTime, time);
     gl.uniform1f(U.uAspect, aspect);
     gl.uniform1f(U.uScale, scale);

@@ -71,207 +71,320 @@
               <a class="src" href="https://github.com/Jitheswar">github.com/Jitheswar</a>
             </aside>
           </div>
-          <dl class="facts">
-            <div><dt>Studying</dt><dd>B.Tech CSE, KL University Hyderabad</dd></div>
-            <div><dt>Based in</dt><dd>Hyderabad, India</dd></div>
-            <div><dt>Works on</dt><dd>Machine learning, browsers and compilers, Linux desktops</dd></div>
-          </dl>
         </div>
+        <ul class="proof">
+          <li><b>23</b><span>patches on Chromium, in a browser that hides what Chrome leaks</span></li>
+          <li><b>2</b><span>fixes merged into Zephyr RTOS</span></li>
+          <li><b>0.982</b><span>screening sensitivity, reported with its intervals</span></li>
+          <li><b>3</b><span>demos you can run on this page</span></li>
+        </ul>
       </div>
     </section>
 
     <div class="wrap chapter" id="work">
       <h2 id="work-h">Work</h2>
-      <p>Six projects. As you scroll, the same points rearrange into each one. Three of them have a demo you can try on this page.</p>
+      <p>Six projects. As you scroll, the same points rearrange into each one.</p>
     </div>
 
-    <article class="scene project" data-shape="globe" data-side="right" data-accent="#7FB6FF" style="--accent:#7FB6FF">
-      <div class="wrap">
-        <div class="panel" data-reveal>
+    <article class="project" style="--accent:#7FB6FF">
+      <header class="scene title-screen" data-shape="globe" data-x="0.2" data-y="0.06" data-y-m="0.16" data-dim="0.95" data-accent="#7FB6FF">
+        <div class="wrap">
           <p class="idx"><b>01</b> Privacy browser</p>
-          <h3>JithuBrowser</h3>
-          <p class="context">A privacy-focused browser built on official Chromium</p>
+          <h3 class="name">JithuBrowser</h3>
+          <p class="pitch">A privacy-focused browser built on official Chromium.</p>
           <p class="repo" data-repo="JithuBrowser"><span>3 stars</span><span>Updated Oct 2026</span></p>
-          <p>Websites keep working, including Chrome-only ones, and Chrome Web Store extensions install normally. Pages just can't watch what you do. Canvas, WebGL and audio fingerprints are blurred, keystroke timing is jittered so typing rhythm can't identify you, the keyboard layout and client hints look like a stock install, and a page can't tell when you switch tabs or windows.</p>
-          <p>It is <a class="claim" href="#n2" data-n="2">23 patches<sup>2</sup></a> on top of Chromium 155, each protection a feature flag that can be turned off per site. On Linux it passes all 35 tests of its privacy suite, where <a class="claim" href="#n3" data-n="3">stock Chrome fails 31<sup>3</sup></a>.</p>
-          <div class="demo" id="demo-probe" hidden>
-            <p class="demo-h"><b>Try it</b> What this page can see about you right now</p>
-            <div class="probe">
-              <div class="probe-head"><span>Signal</span><span>Your browser</span><span>In JithuBrowser</span></div>
-              <div><span>Times you left this tab</span><span data-k="vis">0</span><span>0, the page always looks visible</span></div>
-              <div><span>Times this window lost focus</span><span data-k="focus">0</span><span>0, it always looks focused</span></div>
-              <div><span>Window size and position</span><span data-k="win"></span><span>Only the page area, no position</span></div>
-              <div><span>Pages visited in this tab</span><span data-k="hist"></span><span>2 at most</span></div>
-              <div><span>Automation flag</span><span data-k="auto"></span><span>Always false</span></div>
-              <div><span>Canvas fingerprint</span><span data-k="canvas"></span><span>Pixels slightly noised</span></div>
-              <div><span>Your typing rhythm</span><span data-k="keys">type below</span><span>Each key delayed by up to 20 ms</span></div>
+        </div>
+      </header>
+      <div class="scene detail" data-shape="globe" data-side="center" data-dim="0.14" data-accent="#7FB6FF">
+        <div class="wrap bento">
+          <div class="tile t-stat" data-reveal>
+            <p class="big">31<small>/35</small></p>
+            <p class="cap">privacy tests that <a class="claim" href="#n3" data-n="3">stock Chrome fails<sup>3</sup></a> on Linux. JithuBrowser passes all 35.</p>
+            <p class="sub"><b><a class="claim" href="#n2" data-n="2">23 patches<sup>2</sup></a></b> on Chromium 155, each one a switch you can turn off per site</p>
+          </div>
+          <div class="tile t-text" data-reveal>
+            <p class="lead">Websites keep working, including Chrome-only ones, and Chrome Web Store extensions install normally. Pages just can't watch what you do.</p>
+            <details class="more">
+              <summary>More detail</summary>
+              <p>Canvas, WebGL and audio fingerprints are blurred, keystroke timing is jittered so typing rhythm can't identify you, the keyboard layout and client hints look like a stock install, and a page can't tell when you switch tabs or windows.</p>
+              <p><strong>What isn't done.</strong> The Windows installer is cross-compiled on Linux and passes the suite under Wine, but it has not been run on real Windows yet. The README says so at the top.</p>
+            </details>
+            <p class="stack">C++, Chromium, Python, pytest. Pre-release for Linux and Windows.</p>
+            <p class="links"><a href="https://github.com/Jitheswar/JithuBrowser">Code on GitHub</a><a href="https://github.com/Jitheswar/JithuBrowser/releases">Downloads</a><a href="https://github.com/Jitheswar/JithuBrowser/blob/main/docs/DESIGN.md">Design and limits</a></p>
+          </div>
+          <div class="tile t-demo" data-reveal>
+            <div class="demo" id="demo-probe" hidden>
+              <p class="demo-h"><b>Try it</b> What this page can see about you right now</p>
+              <div class="probe">
+                <div class="probe-head"><span>Signal</span><span>Your browser</span><span>In JithuBrowser</span></div>
+                <div><span>Times you left this tab</span><span data-k="vis">0</span><span>0, the page always looks visible</span></div>
+                <div><span>Times this window lost focus</span><span data-k="focus">0</span><span>0, it always looks focused</span></div>
+                <div><span>Window size and position</span><span data-k="win"></span><span>Only the page area, no position</span></div>
+                <div><span>Pages visited in this tab</span><span data-k="hist"></span><span>2 at most</span></div>
+                <div><span>Automation flag</span><span data-k="auto"></span><span>Always false</span></div>
+                <div><span>Canvas fingerprint</span><span data-k="canvas"></span><span>Pixels slightly noised</span></div>
+                <div><span>Your typing rhythm</span><span data-k="keys">type below</span><span>Each key delayed by up to 20 ms</span></div>
+              </div>
+              <label class="demo-field"><span>Type a few words</span><input type="text" id="probe-type" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="the gaps between keys are a signature"></label>
+              <p class="demo-note">The middle column is read live by this page's own script, the way any site can read it. Nothing is sent anywhere. Switch tabs and come back to see the first two rows count.</p>
             </div>
-            <label class="demo-field"><span>Type a few words</span><input type="text" id="probe-type" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="the gaps between keys are a signature"></label>
-            <p class="demo-note">The middle column is read live by this page's own script, the way any site can read it. Nothing is sent anywhere. Switch tabs and come back to see the first two rows count.</p>
           </div>
-          <h4>What isn't done</h4>
-          <p>The Windows installer is cross-compiled on Linux and passes the suite under Wine, but it has not been run on real Windows yet. The README says so at the top.</p>
-          <div class="notes">
-            <aside class="note" id="n2">
-              <span class="note-n">2</span>
-              <p>The patch list, applied in order to an unmodified Chromium checkout.</p>
-              <a class="src" href="https://github.com/Jitheswar/JithuBrowser/blob/main/patches/series">patches/series</a>
-            </aside>
-            <aside class="note" id="n3">
-              <span class="note-n">3</span>
-              <p>Runs on a virtual display with a window manager, so tab switches and minimising are real. Point it at stock Chrome as the control.</p>
-              <a class="src" href="https://github.com/Jitheswar/JithuBrowser/blob/main/tests/run-tests.sh">tests/run-tests.sh</a>
-            </aside>
+          <div class="tile t-src" data-reveal>
+            <p class="tile-h">Sources</p>
+            <div class="notes">
+              <aside class="note" id="n2">
+                <span class="note-n">2</span>
+                <p>The patch list, applied in order to an unmodified Chromium checkout.</p>
+                <a class="src" href="https://github.com/Jitheswar/JithuBrowser/blob/main/patches/series">patches/series</a>
+              </aside>
+              <aside class="note" id="n3">
+                <span class="note-n">3</span>
+                <p>Runs on a virtual display with a window manager, so tab switches and minimising are real. Point it at stock Chrome as the control.</p>
+                <a class="src" href="https://github.com/Jitheswar/JithuBrowser/blob/main/tests/run-tests.sh">tests/run-tests.sh</a>
+              </aside>
+            </div>
           </div>
-          <p class="stack">C++, Chromium, Python, pytest. Pre-release for Linux and Windows.</p>
-          <p class="links"><a href="https://github.com/Jitheswar/JithuBrowser">Code on GitHub</a><a href="https://github.com/Jitheswar/JithuBrowser/releases">Downloads</a><a href="https://github.com/Jitheswar/JithuBrowser/blob/main/docs/DESIGN.md">Design and limits</a></p>
         </div>
       </div>
     </article>
 
-    <article class="scene project" data-shape="cube" data-side="left" data-accent="#9BE06A" style="--accent:#9BE06A">
-      <div class="wrap">
-        <div class="panel" data-reveal>
+    <article class="project" style="--accent:#9BE06A">
+      <header class="scene title-screen" data-shape="cube" data-x="0.2" data-y="0.06" data-y-m="0.16" data-dim="0.95" data-accent="#9BE06A">
+        <div class="wrap">
           <p class="idx"><b>02</b> AI teammate</p>
-          <h3>Craftie</h3>
-          <p class="context">An AI coworker for Minecraft that joins your world as a second player</p>
+          <h3 class="name">Craftie</h3>
+          <p class="pitch">An AI coworker for Minecraft that joins your world as a second player.</p>
           <p class="repo" data-repo="craftie"><span>Updated Nov 2026</span></p>
-          <p>Ask it in chat for a house, twenty iron or a set of armor and it works out every step itself: which tool it needs first, where to mine, what to smelt. The rest of the time it follows you, defends you, rescues your items when you die, and keeps itself fed and equipped. Up to four of them can split a big build between them.</p>
-          <p>The AI only decides what to do. Pathfinding, mining, crafting, building and fighting are plain code running at game speed, so <a class="claim" href="#n4" data-n="4">most jobs need one AI call<sup>4</sup></a>, and following or fighting need none. It works with Claude, OpenAI, OpenRouter, DeepSeek, or a free local model.</p>
-          <h4>What isn't done</h4>
-          <p>Survival builds from an empty inventory take twenty minutes or more, because it gathers everything itself. Bedrock Edition is not supported.</p>
-          <div class="notes">
-            <aside class="note" id="n4">
-              <span class="note-n">4</span>
-              <p>The planner gets any item by working backwards through Minecraft's recipes, tools and drops, with no model in the loop.</p>
-              <a class="src" href="https://github.com/Jitheswar/craftie/blob/main/src/body/minecraft/planner.ts">src/body/minecraft/planner.ts</a>
-            </aside>
-          </div>
-          <p class="stack">TypeScript, Mineflayer, SQLite, Fabric. A fan project, not affiliated with Mojang or Microsoft.</p>
-          <p class="links"><a href="https://github.com/Jitheswar/craftie">Code on GitHub</a></p>
         </div>
-      </div>
-    </article>
-
-    <article class="scene project" data-shape="tree" data-side="right" data-accent="#C9A0FF" style="--accent:#C9A0FF">
-      <div class="wrap">
-        <div class="panel" data-reveal>
-          <p class="idx"><b>03</b> Compiler</p>
-          <h3>NexCC</h3>
-          <p class="context">An optimizing compiler for a C subset where nothing is hidden. Built with a teammate.</p>
-          <p class="repo" data-repo="nexcc"><span>Updated Oct 2026</span></p>
-          <p>Teaching tools usually show one fragment, such as a regex becoming an automaton, and real compilers bury the classical stages in millions of lines. NexCC keeps the whole path visible in one workbench: tokens, syntax tree, three-address code, control-flow graph, SSA form, each optimization pass as a diff, and the RISC-V assembly that comes out.</p>
-          <p>The optimizer runs mem2reg, sparse conditional constant propagation, global value numbering, loop-invariant code motion and dead code elimination. The backend allocates registers by graph coloring and emits RV32IM. A second backend is a bytecode VM that catches out-of-bounds and use-after-free accesses and can <a class="claim" href="#n5" data-n="5">step backwards<sup>5</sup></a> through execution.</p>
-          <div class="demo" id="demo-nexcc" hidden>
-            <p class="demo-h"><b>Try it</b> NexCC's automata lab, running in your browser</p>
-            <div class="demo-fields">
-              <label class="demo-field"><span>Regular expression</span><input type="text" id="nx-re" value="(a|b)*abb" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
-              <label class="demo-field"><span>Test string</span><input type="text" id="nx-str" value="aabb" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      </header>
+      <div class="scene detail" data-shape="cube" data-side="center" data-dim="0.14" data-accent="#9BE06A">
+        <div class="wrap bento">
+          <div class="tile t-stat" data-reveal>
+            <p class="big">1</p>
+            <p class="cap">AI call is all <a class="claim" href="#n4" data-n="4">most jobs need<sup>4</sup></a>. Following you and fighting need none.</p>
+            <p class="sub"><b>Up to 4</b> Crafties can split one big build between them</p>
+          </div>
+          <div class="tile t-text" data-reveal>
+            <p class="lead">Ask it in chat for a house, twenty iron or a set of armor and it works out every step itself: which tool it needs first, where to mine, what to smelt.</p>
+            <details class="more">
+              <summary>More detail</summary>
+              <p>The rest of the time it follows you, defends you, rescues your items when you die, and keeps itself fed and equipped. The AI only decides what to do. Pathfinding, mining, crafting, building and fighting are plain code running at game speed. It works with Claude, OpenAI, OpenRouter, DeepSeek, or a free local model.</p>
+              <p><strong>What isn't done.</strong> Survival builds from an empty inventory take twenty minutes or more, because it gathers everything itself. Bedrock Edition is not supported.</p>
+            </details>
+            <p class="stack">TypeScript, Mineflayer, SQLite, Fabric. A fan project, not affiliated with Mojang or Microsoft.</p>
+            <p class="links"><a href="https://github.com/Jitheswar/craftie">Code on GitHub</a></p>
+          </div>
+          <div class="tile t-src wide" data-reveal>
+            <p class="tile-h">Sources</p>
+            <div class="notes">
+              <aside class="note" id="n4">
+                <span class="note-n">4</span>
+                <p>The planner gets any item by working backwards through Minecraft's recipes, tools and drops, with no model in the loop.</p>
+                <a class="src" href="https://github.com/Jitheswar/craftie/blob/main/src/body/minecraft/planner.ts">src/body/minecraft/planner.ts</a>
+              </aside>
             </div>
-            <p class="demo-out" id="nx-out" aria-live="polite"></p>
-            <div class="nx-graph" id="nx-graph"></div>
-            <p class="demo-note">This is the project's own code from <code>src/automata/</code>, unmodified: Thompson's construction, subset construction, then Hopcroft's minimization. The diagram is the minimized DFA.</p>
           </div>
-          <div class="notes">
-            <aside class="note" id="n5">
-              <span class="note-n">5</span>
-              <p>Each step records a delta, and stepping back undoes it. The 17 tests in <code>test/nexcc.test.js</code> cover every stage, this one included.</p>
-              <a class="src" href="https://github.com/Jitheswar/nexcc/blob/main/src/vm/history.js">src/vm/history.js</a>
-            </aside>
-          </div>
-          <p class="stack">JavaScript, Node.js. Includes automata and LL/LR grammar labs.</p>
-          <p class="links"><a href="https://github.com/Jitheswar/nexcc">Code on GitHub</a></p>
         </div>
       </div>
     </article>
 
-    <article class="scene project" data-shape="eye" data-side="left" data-accent="#FF8A7A" style="--accent:#FF8A7A">
-      <div class="wrap">
-        <div class="panel" data-reveal>
+    <article class="project" style="--accent:#C9A0FF">
+      <header class="scene title-screen" data-shape="tree" data-x="0.2" data-y="0.06" data-y-m="0.16" data-dim="0.95" data-accent="#C9A0FF">
+        <div class="wrap">
+          <p class="idx"><b>03</b> Compiler</p>
+          <h3 class="name">NexCC</h3>
+          <p class="pitch">An optimizing compiler for a C subset where nothing is hidden. Built with a teammate.</p>
+          <p class="repo" data-repo="nexcc"><span>Updated Oct 2026</span></p>
+        </div>
+      </header>
+      <div class="scene detail" data-shape="tree" data-side="center" data-dim="0.14" data-accent="#C9A0FF">
+        <div class="wrap bento">
+          <div class="tile t-stat" data-reveal>
+            <p class="big">17</p>
+            <p class="cap">tests cover every stage, from regex automata to a VM that can <a class="claim" href="#n5" data-n="5">step backwards<sup>5</sup></a>.</p>
+            <p class="sub"><b>5 optimizer passes</b> on SSA, then a RISC-V backend</p>
+          </div>
+          <div class="tile t-text" data-reveal>
+            <p class="lead">Teaching tools usually show one fragment, and real compilers bury the classical stages in millions of lines. NexCC keeps the whole path visible in one workbench: tokens, syntax tree, three-address code, control-flow graph, SSA form, each optimization pass as a diff, and the RISC-V assembly that comes out.</p>
+            <details class="more">
+              <summary>More detail</summary>
+              <p>The optimizer runs mem2reg, sparse conditional constant propagation, global value numbering, loop-invariant code motion and dead code elimination. The backend allocates registers by graph coloring and emits RV32IM. A second backend is a bytecode VM that catches out-of-bounds and use-after-free accesses and can step backwards through execution.</p>
+            </details>
+            <p class="stack">JavaScript, Node.js. Includes automata and LL/LR grammar labs.</p>
+            <p class="links"><a href="https://github.com/Jitheswar/nexcc">Code on GitHub</a></p>
+          </div>
+          <div class="tile t-demo" data-reveal>
+            <div class="demo" id="demo-nexcc" hidden>
+              <p class="demo-h"><b>Try it</b> NexCC's automata lab, running in your browser</p>
+              <div class="demo-fields">
+                <label class="demo-field"><span>Regular expression</span><input type="text" id="nx-re" value="(a|b)*abb" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+                <label class="demo-field"><span>Test string</span><input type="text" id="nx-str" value="aabb" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+              </div>
+              <p class="demo-out" id="nx-out" aria-live="polite"></p>
+              <div class="nx-graph" id="nx-graph"></div>
+              <p class="demo-note">This is the project's own code from <code>src/automata/</code>, unmodified: Thompson's construction, subset construction, then Hopcroft's minimization. The diagram is the minimized DFA.</p>
+            </div>
+          </div>
+          <div class="tile t-src" data-reveal>
+            <p class="tile-h">Sources</p>
+            <div class="notes">
+              <aside class="note" id="n5">
+                <span class="note-n">5</span>
+                <p>Each step records a delta, and stepping back undoes it. The 17 tests in <code>test/nexcc.test.js</code> cover every stage, this one included.</p>
+                <a class="src" href="https://github.com/Jitheswar/nexcc/blob/main/src/vm/history.js">src/vm/history.js</a>
+              </aside>
+            </div>
+          </div>
+          <figure class="tile t-shot" data-reveal>
+            <img src="assets/nexcc-assembly.webp" width="1440" height="900" loading="lazy" alt="The NexCC workbench: C source on the left, the RV32IM assembly it compiles to on the right.">
+            <figcaption>C in, RISC-V assembly out</figcaption>
+          </figure>
+          <figure class="tile t-shot" data-reveal>
+            <img src="assets/nexcc-vm.webp" width="1440" height="900" loading="lazy" alt="The NexCC time-travel VM after a run: output, registers, a clean memory check and the bytecode listing.">
+            <figcaption>The VM after a run, with step back and a memory check</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <article class="project" style="--accent:#FF8A7A">
+      <header class="scene title-screen" data-shape="eye" data-x="0.2" data-y="0.06" data-y-m="0.16" data-dim="0.95" data-accent="#FF8A7A">
+        <div class="wrap">
           <p class="idx"><b>04</b> Medical imaging</p>
-          <h3>Diabetic retinopathy screening</h3>
-          <p class="context">Smart India Hackathon 2026, problem statement 26038</p>
+          <h3 class="name long">Diabetic retinopathy screening</h3>
+          <p class="pitch">Smart India Hackathon 2026, problem statement 26038.</p>
           <p class="repo" data-repo="sih26038"><span>2 stars</span><span>Updated Sep 2026</span></p>
-          <p>Give it a photo of the back of the eye and it answers <em>clear</em>, <em>refer</em> or <em>escalate to a person</em>. A ResNet-50 grades the image. A Grad-CAM heatmap of where the model looked is then checked against lesion evidence from two independent detectors, and a rule-based policy escalates whenever the image is poor or the evidence disagrees, instead of trusting the classifier alone.</p>
-          <p>At the frozen operating point it reaches <a class="claim" href="#n6" data-n="6">sensitivity 0.982 and specificity 0.917<sup>6</sup></a> on validation. Accuracy alone is never reported.</p>
-          <h4>What didn't make it</h4>
-          <p>One configuration let the pipeline decide more cases without a person, but it sent <a class="claim" href="#n7" data-n="7">two referable patients home<sup>7</sup></a> where the classifier alone sent none. It was rejected, and the reason is written down as a decision record.</p>
-          <div class="notes">
-            <aside class="note" id="n6">
-              <span class="note-n">6</span>
-              <p>Validation split, referring at a calibrated probability of 0.40 or higher. The internal test split gives 0.960 and 0.917. 95% Wilson intervals are in the design doc.</p>
-              <a class="src" href="https://github.com/Jitheswar/sih26038/blob/master/docs/SIH26038_design.html">docs/SIH26038_design.html</a>
-            </aside>
-            <aside class="note" id="n7">
-              <span class="note-n">7</span>
-              <p>Configuration A12, rejected at equal coverage under the safety veto.</p>
-              <a class="src" href="https://github.com/Jitheswar/sih26038/blob/master/docs/adr/0001-equal-coverage-safety-veto.md">docs/adr/0001-equal-coverage-safety-veto.md</a>
-            </aside>
+        </div>
+      </header>
+      <div class="scene detail" data-shape="eye" data-side="center" data-dim="0.14" data-accent="#FF8A7A">
+        <div class="wrap bento">
+          <div class="tile t-stat" data-reveal>
+            <p class="big">0.982</p>
+            <p class="cap"><a class="claim" href="#n6" data-n="6">sensitivity, at specificity 0.917<sup>6</sup></a> on validation. Accuracy alone is never reported.</p>
+            <p class="sub"><b>3 answers:</b> clear, refer, or escalate to a person</p>
           </div>
-          <p class="stack">MATLAB, Simulink, ResNet-50, U-Net. A research prototype, not a medical device.</p>
-          <p class="links"><a href="https://github.com/Jitheswar/sih26038">Code on GitHub</a><a href="https://github.com/Jitheswar/sih26038/blob/master/docs/SIH26038_design.html">Design document</a></p>
+          <div class="tile t-text" data-reveal>
+            <p class="lead">Give it a photo of the back of the eye and it answers <em>clear</em>, <em>refer</em> or <em>escalate to a person</em>. A ResNet-50 grades the image, and a heatmap of where the model looked is checked against lesion evidence from two independent detectors.</p>
+            <details class="more">
+              <summary>More detail</summary>
+              <p>A rule-based policy escalates whenever the image is poor or the evidence disagrees, instead of trusting the classifier alone.</p>
+              <p><strong>What didn't make it.</strong> One configuration let the pipeline decide more cases without a person, but it sent <a class="claim" href="#n7" data-n="7">two referable patients home<sup>7</sup></a> where the classifier alone sent none. It was rejected, and the reason is written down as a decision record.</p>
+            </details>
+            <p class="stack">MATLAB, Simulink, ResNet-50, U-Net. A research prototype, not a medical device.</p>
+            <p class="links"><a href="https://github.com/Jitheswar/sih26038">Code on GitHub</a><a href="https://github.com/Jitheswar/sih26038/blob/master/docs/SIH26038_design.html">Design document</a></p>
+          </div>
+          <div class="tile t-src wide" data-reveal>
+            <p class="tile-h">Sources</p>
+            <div class="notes">
+              <aside class="note" id="n6">
+                <span class="note-n">6</span>
+                <p>Validation split, referring at a calibrated probability of 0.40 or higher. The internal test split gives 0.960 and 0.917. 95% Wilson intervals are in the design doc.</p>
+                <a class="src" href="https://github.com/Jitheswar/sih26038/blob/master/docs/SIH26038_design.html">docs/SIH26038_design.html</a>
+              </aside>
+              <aside class="note" id="n7">
+                <span class="note-n">7</span>
+                <p>Configuration A12, rejected at equal coverage under the safety veto.</p>
+                <a class="src" href="https://github.com/Jitheswar/sih26038/blob/master/docs/adr/0001-equal-coverage-safety-veto.md">docs/adr/0001-equal-coverage-safety-veto.md</a>
+              </aside>
+            </div>
+          </div>
         </div>
       </div>
     </article>
 
-    <article class="scene project" data-shape="chain" data-side="right" data-accent="#F3C969" style="--accent:#F3C969">
-      <div class="wrap">
-        <div class="panel" data-reveal>
+    <article class="project" style="--accent:#F3C969">
+      <header class="scene title-screen" data-shape="chain" data-x="0.2" data-y="0.06" data-y-m="0.16" data-dim="0.95" data-accent="#F3C969">
+        <div class="wrap">
           <p class="idx"><b>05</b> Verifiable payments</p>
-          <h3>Agent spend policy engine</h3>
-          <p class="context">Decides whether an AI agent may pay for something, before any money moves</p>
+          <h3 class="name long">Agent spend policy engine</h3>
+          <p class="pitch">Decides whether an AI agent may pay for something, before any money moves.</p>
           <p class="repo" data-repo="agent-spend-policy-engine"><span>Updated Sep 2026</span></p>
-          <p>Approved payments settle for real on Algorand testnet through the x402 protocol: request, get a 402, pay, retry, get a 200. The APIs behind the paywall are real too, with live weather from Open-Meteo and company lookups from SEC EDGAR.</p>
-          <p>Every decision, allowed or blocked, goes into a log where each entry carries the hash of the one before it, and the latest hash is written to Algorand. Anyone can confirm the record wasn't rewritten in <a class="claim" href="#n8" data-n="8">about ten seconds<sup>8</sup></a>, without trusting whoever runs the system. The dashboard has a button that tampers with a past record, and verification names the exact entry that changed.</p>
-          <div class="demo" id="demo-chain" hidden>
-            <p class="demo-h"><b>Try it</b> Change a past record, then verify the log</p>
-            <ol class="chain" id="chain-list"></ol>
-            <p class="demo-actions"><button type="button" id="chain-tamper">Tamper with a record</button><button type="button" id="chain-verify">Verify</button><button type="button" id="chain-reset">Reset</button></p>
-            <p class="demo-out" id="chain-out" aria-live="polite"></p>
-            <p class="demo-note">Real SHA-256, computed in your browser, on made-up entries. Each entry's hash covers its contents and the hash before it. The project also writes the latest hash to Algorand, so even the log's owner can't quietly rebuild the chain.</p>
+        </div>
+      </header>
+      <div class="scene detail" data-shape="chain" data-side="center" data-dim="0.14" data-accent="#F3C969">
+        <div class="wrap bento">
+          <div class="tile t-stat" data-reveal>
+            <p class="big">10<small> s</small></p>
+            <p class="cap">is <a class="claim" href="#n8" data-n="8">about how long<sup>8</sup></a> it takes anyone to confirm the log wasn't rewritten, without trusting whoever runs it.</p>
+            <p class="sub"><b><a class="claim" href="#n9" data-n="9">About 15 minutes<sup>9</sup></a></b> from <code>git clone</code> to a paid API call</p>
           </div>
-          <p>A new reader can go from <code>git clone</code> to a paid API call in <a class="claim" href="#n9" data-n="9">about fifteen minutes<sup>9</sup></a>.</p>
-          <div class="notes">
-            <aside class="note" id="n8">
-              <span class="note-n">8</span>
-              <p>Recomputes every hash, then checks each anchor against the public AlgoNode indexer. It exits 0 only if the chain is intact and confirmed on-chain.</p>
-              <a class="src" href="https://github.com/Jitheswar/agent-spend-policy-engine/blob/master/scripts/verify_audit.py">scripts/verify_audit.py</a>
-            </aside>
-            <aside class="note" id="n9">
-              <span class="note-n">9</span>
-              <p>A step-by-step walkthrough from an empty machine to a settled payment.</p>
-              <a class="src" href="https://github.com/Jitheswar/agent-spend-policy-engine/blob/master/GETTING_STARTED.md">GETTING_STARTED.md</a>
-            </aside>
+          <div class="tile t-text" data-reveal>
+            <p class="lead">Every decision, allowed or blocked, goes into a log where each entry carries the hash of the one before it, and the latest hash is written to Algorand.</p>
+            <details class="more">
+              <summary>More detail</summary>
+              <p>Approved payments settle for real on Algorand testnet through the x402 protocol: request, get a 402, pay, retry, get a 200. The APIs behind the paywall are real too, with live weather from Open-Meteo and company lookups from SEC EDGAR. The dashboard has a button that tampers with a past record, and verification names the exact entry that changed.</p>
+            </details>
+            <p class="stack">FastAPI, Pydantic, Algorand, x402, testnet USDC.</p>
+            <p class="links"><a href="https://github.com/Jitheswar/agent-spend-policy-engine">Code on GitHub</a></p>
           </div>
-          <p class="stack">FastAPI, Pydantic, Algorand, x402, testnet USDC.</p>
-          <p class="links"><a href="https://github.com/Jitheswar/agent-spend-policy-engine">Code on GitHub</a></p>
+          <div class="tile t-demo" data-reveal>
+            <div class="demo" id="demo-chain" hidden>
+              <p class="demo-h"><b>Try it</b> Change a past record, then verify the log</p>
+              <ol class="chain" id="chain-list"></ol>
+              <p class="demo-actions"><button type="button" id="chain-tamper">Tamper with a record</button><button type="button" id="chain-verify">Verify</button><button type="button" id="chain-reset">Reset</button></p>
+              <p class="demo-out" id="chain-out" aria-live="polite"></p>
+              <p class="demo-note">Real SHA-256, computed in your browser, on made-up entries. Each entry's hash covers its contents and the hash before it. The project also writes the latest hash to Algorand, so even the log's owner can't quietly rebuild the chain.</p>
+            </div>
+          </div>
+          <div class="tile t-src" data-reveal>
+            <p class="tile-h">Sources</p>
+            <div class="notes">
+              <aside class="note" id="n8">
+                <span class="note-n">8</span>
+                <p>Recomputes every hash, then checks each anchor against the public AlgoNode indexer. It exits 0 only if the chain is intact and confirmed on-chain.</p>
+                <a class="src" href="https://github.com/Jitheswar/agent-spend-policy-engine/blob/master/scripts/verify_audit.py">scripts/verify_audit.py</a>
+              </aside>
+              <aside class="note" id="n9">
+                <span class="note-n">9</span>
+                <p>A step-by-step walkthrough from an empty machine to a settled payment.</p>
+                <a class="src" href="https://github.com/Jitheswar/agent-spend-policy-engine/blob/master/GETTING_STARTED.md">GETTING_STARTED.md</a>
+              </aside>
+            </div>
+          </div>
         </div>
       </div>
     </article>
 
-    <article class="scene project" data-shape="leaf" data-side="left" data-accent="#5FD3A8" style="--accent:#5FD3A8">
-      <div class="wrap">
-        <div class="panel" data-reveal>
+    <article class="project" style="--accent:#5FD3A8">
+      <header class="scene title-screen" data-shape="leaf" data-x="0.2" data-y="0.06" data-y-m="0.16" data-dim="0.95" data-accent="#5FD3A8">
+        <div class="wrap">
           <p class="idx"><b>06</b> Offline classifier</p>
-          <h3>Ayur-Ai</h3>
-          <p class="context">Names an Ayurvedic medicinal leaf from a photo, then looks up what it's used for</p>
+          <h3 class="name">Ayur-Ai</h3>
+          <p class="pitch">Names an Ayurvedic medicinal leaf from a photo, then looks up what it's used for.</p>
           <p class="repo" data-repo="Ayur-Ai"><span>Updated Sep 2026</span></p>
-          <p>A ResNet18 fine-tuned in PyTorch identifies 30 species, and a TF-IDF search over a herb knowledge base finds their uses or matches herbs to a symptom. It runs fully offline, with no LLM and no API keys, and trains in about two minutes on a laptop GPU.</p>
-          <p>Many photos in the dataset show the same physical leaf, so near-duplicates are grouped and kept on one side of every split. Under that rule it scores <a class="claim" href="#n10" data-n="10">98.64% accuracy<sup>10</sup></a> in 5-fold cross-validation. A single split swings <a class="claim" href="#n11" data-n="11">between 0.87 and 1.00<sup>11</sup></a> depending on the random seed, which is why the cross-validated number is the one quoted.</p>
-          <div class="notes">
-            <aside class="note" id="n10">
-              <span class="note-n">10</span>
-              <p>Mendeley Medicinal Leaf Dataset, 1,835 images. Macro F1 0.9849.</p>
-              <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/cv_eval.py">experiments/cv_eval.py</a>
-            </aside>
-            <aside class="note" id="n11">
-              <span class="note-n">11</span>
-              <p>One line per seed, with the split and the score it produced.</p>
-              <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/multiseed.jsonl">experiments/multiseed.jsonl</a>
-            </aside>
+        </div>
+      </header>
+      <div class="scene detail" data-shape="leaf" data-side="center" data-dim="0.14" data-accent="#5FD3A8">
+        <div class="wrap bento">
+          <div class="tile t-stat" data-reveal>
+            <p class="big">98.64<small>%</small></p>
+            <p class="cap"><a class="claim" href="#n10" data-n="10">accuracy in 5-fold cross-validation<sup>10</sup></a>, with near-duplicate photos kept on one side of every split.</p>
+            <p class="sub"><b>30 species</b>, no LLM, no API keys, no network</p>
           </div>
-          <p class="stack">PyTorch, scikit-learn, Streamlit. Educational, not medical advice.</p>
-          <p class="links"><a href="https://github.com/Jitheswar/Ayur-Ai">Code on GitHub</a></p>
+          <div class="tile t-text" data-reveal>
+            <p class="lead">A ResNet18 fine-tuned in PyTorch identifies 30 species, and a TF-IDF search over a herb knowledge base finds their uses or matches herbs to a symptom. It runs fully offline and trains in about two minutes on a laptop GPU.</p>
+            <details class="more">
+              <summary>More detail</summary>
+              <p>Many photos in the dataset show the same physical leaf, so near-duplicates are grouped before splitting. A single split swings <a class="claim" href="#n11" data-n="11">between 0.87 and 1.00<sup>11</sup></a> depending on the random seed, which is why the cross-validated number is the one quoted.</p>
+            </details>
+            <p class="stack">PyTorch, scikit-learn, Streamlit. Educational, not medical advice.</p>
+            <p class="links"><a href="https://github.com/Jitheswar/Ayur-Ai">Code on GitHub</a></p>
+          </div>
+          <div class="tile t-src wide" data-reveal>
+            <p class="tile-h">Sources</p>
+            <div class="notes">
+              <aside class="note" id="n10">
+                <span class="note-n">10</span>
+                <p>Mendeley Medicinal Leaf Dataset, 1,835 images. Macro F1 0.9849.</p>
+                <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/cv_eval.py">experiments/cv_eval.py</a>
+              </aside>
+              <aside class="note" id="n11">
+                <span class="note-n">11</span>
+                <p>One line per seed, with the split and the score it produced.</p>
+                <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/multiseed.jsonl">experiments/multiseed.jsonl</a>
+              </aside>
+            </div>
+          </div>
         </div>
       </div>
     </article>
