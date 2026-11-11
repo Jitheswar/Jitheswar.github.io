@@ -21,7 +21,7 @@ function applyTheme(name, save) {
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.content = THEME_COLORS[name];
   if (save) {
-    try { localStorage.setItem('theme', name); } catch (e) { /* storage unavailable */ }
+    try { localStorage.setItem('theme-v2', name); } catch (e) { /* storage unavailable */ }
   }
 }
 

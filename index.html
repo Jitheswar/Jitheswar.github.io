@@ -23,7 +23,7 @@
     (function () {
       var d = document.documentElement, t = null;
       d.classList.add('js');
-      try { t = localStorage.getItem('theme'); } catch (e) {}
+      try { t = localStorage.getItem('theme-v2'); } catch (e) {}
       if (t === 'notebook' || t === 'sadie' || t === 'glass') d.dataset.theme = t;
       try {
         if (document.createElement('canvas').getContext('webgl')) d.classList.add('has-scene');
