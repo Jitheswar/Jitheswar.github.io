@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="notebook">
+<html lang="en" data-theme="sadie">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,24 +12,30 @@
   <meta property="og:image" content="https://jitheswar.github.io/assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#E6EAE7">
+  <meta name="theme-color" content="#171314">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>
-    // Apply the saved theme before first paint so the page never flashes the wrong one.
+    // Before first paint: apply the saved theme, and note whether the 3D scene can run,
+    // so the layout that leaves room for it never flashes in or out.
     (function () {
-      var t = null;
+      var d = document.documentElement, t = null;
+      d.classList.add('js');
       try { t = localStorage.getItem('theme'); } catch (e) {}
-      if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'sadie';
-      if (t === 'notebook' || t === 'sadie' || t === 'glass') document.documentElement.dataset.theme = t;
+      if (t === 'notebook' || t === 'sadie' || t === 'glass') d.dataset.theme = t;
+      try {
+        if (document.createElement('canvas').getContext('webgl')) d.classList.add('has-scene');
+      } catch (e) {}
     })();
   </script>
 </head>
 <body>
   <a class="skip" href="#work">Skip to projects</a>
   <div class="backdrop" aria-hidden="true"></div>
+  <div class="aura" aria-hidden="true"></div>
+  <canvas id="scene" aria-hidden="true"></canvas>
 
   <header class="site-head">
     <div class="wrap head-inner">
@@ -46,182 +52,249 @@
         <button type="button" data-set-theme="glass" title="Liquid Glass"><span class="sw sw-glass"></span><span class="sw-label">Glass</span></button>
       </div>
     </div>
+    <div class="progress" aria-hidden="true"></div>
   </header>
 
   <main id="top">
-    <section class="wrap hero row">
-      <h1>I build things you can <a class="claim" href="#n1" data-n="1">check.<sup>1</sup></a></h1>
-      <div class="main">
-        <p class="lede">I'm Jitheswar, a computer science student at KL University Hyderabad, class of 2028. I work on ML and systems: a browser that passes a privacy test suite stock Chrome fails, a compiler where every stage can be inspected, a screening tool that reports its confidence intervals, and fixes merged into Zephyr RTOS.</p>
-        <p class="how-to">Marked numbers on this page are citations. Point at one, or tap it, to see the file in the repo that produces it.</p>
-      </div>
-      <div class="margin">
-        <aside class="note" id="n1">
-          <span class="note-n">1</span>
-          <p>Every project below is public, and its results can be rerun from the repo.</p>
-          <a class="src" href="https://github.com/Jitheswar">github.com/Jitheswar</a>
-        </aside>
-        <dl class="facts">
-          <div><dt>Studying</dt><dd>B.Tech CSE, KL University Hyderabad</dd></div>
-          <div><dt>Based in</dt><dd>Hyderabad, India</dd></div>
-          <div><dt>Works on</dt><dd>Machine learning, browsers and compilers, Linux desktops</dd></div>
-        </dl>
+    <section class="scene hero" data-shape="check" data-side="right" data-y-m="-0.14">
+      <div class="wrap">
+        <p class="eyebrow">Jitheswar · ML and systems · Hyderabad</p>
+        <h1>I build things you can <a class="claim" href="#n1" data-n="1">check.<sup>1</sup></a></h1>
+        <div class="stage" aria-hidden="true"></div>
+        <div class="panel">
+          <p class="lede">I'm Jitheswar, a computer science student at KL University Hyderabad, class of 2028. I work on ML and systems: a browser that passes a privacy test suite stock Chrome fails, a compiler where every stage can be inspected, a screening tool that reports its confidence intervals, and fixes merged into Zephyr RTOS.</p>
+          <p class="how-to">Marked numbers on this page are citations. Point at one, or tap it, to see the file in the repo that produces it.</p>
+          <div class="notes">
+            <aside class="note" id="n1">
+              <span class="note-n">1</span>
+              <p>Every project below is public, and its results can be rerun from the repo.</p>
+              <a class="src" href="https://github.com/Jitheswar">github.com/Jitheswar</a>
+            </aside>
+          </div>
+          <dl class="facts">
+            <div><dt>Studying</dt><dd>B.Tech CSE, KL University Hyderabad</dd></div>
+            <div><dt>Based in</dt><dd>Hyderabad, India</dd></div>
+            <div><dt>Works on</dt><dd>Machine learning, browsers and compilers, Linux desktops</dd></div>
+          </dl>
+        </div>
       </div>
     </section>
 
-    <section class="wrap section" id="work" aria-labelledby="work-h">
+    <div class="wrap chapter" id="work">
       <h2 id="work-h">Work</h2>
+      <p>Six projects. As you scroll, the same points rearrange into each one. Three of them have a demo you can try on this page.</p>
+    </div>
 
-      <article class="project row">
-        <div class="main">
+    <article class="scene project" data-shape="globe" data-side="right" data-accent="#7FB6FF" style="--accent:#7FB6FF">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <p class="idx"><b>01</b> Privacy browser</p>
           <h3>JithuBrowser</h3>
           <p class="context">A privacy-focused browser built on official Chromium</p>
+          <p class="repo" data-repo="JithuBrowser"><span>3 stars</span><span>Updated Oct 2026</span></p>
           <p>Websites keep working, including Chrome-only ones, and Chrome Web Store extensions install normally. Pages just can't watch what you do. Canvas, WebGL and audio fingerprints are blurred, keystroke timing is jittered so typing rhythm can't identify you, the keyboard layout and client hints look like a stock install, and a page can't tell when you switch tabs or windows.</p>
           <p>It is <a class="claim" href="#n2" data-n="2">23 patches<sup>2</sup></a> on top of Chromium 155, each protection a feature flag that can be turned off per site. On Linux it passes all 35 tests of its privacy suite, where <a class="claim" href="#n3" data-n="3">stock Chrome fails 31<sup>3</sup></a>.</p>
+          <div class="demo" id="demo-probe" hidden>
+            <p class="demo-h"><b>Try it</b> What this page can see about you right now</p>
+            <div class="probe">
+              <div class="probe-head"><span>Signal</span><span>Your browser</span><span>In JithuBrowser</span></div>
+              <div><span>Times you left this tab</span><span data-k="vis">0</span><span>0, the page always looks visible</span></div>
+              <div><span>Times this window lost focus</span><span data-k="focus">0</span><span>0, it always looks focused</span></div>
+              <div><span>Window size and position</span><span data-k="win"></span><span>Only the page area, no position</span></div>
+              <div><span>Pages visited in this tab</span><span data-k="hist"></span><span>2 at most</span></div>
+              <div><span>Automation flag</span><span data-k="auto"></span><span>Always false</span></div>
+              <div><span>Canvas fingerprint</span><span data-k="canvas"></span><span>Pixels slightly noised</span></div>
+              <div><span>Your typing rhythm</span><span data-k="keys">type below</span><span>Each key delayed by up to 20 ms</span></div>
+            </div>
+            <label class="demo-field"><span>Type a few words</span><input type="text" id="probe-type" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="the gaps between keys are a signature"></label>
+            <p class="demo-note">The middle column is read live by this page's own script, the way any site can read it. Nothing is sent anywhere. Switch tabs and come back to see the first two rows count.</p>
+          </div>
           <h4>What isn't done</h4>
           <p>The Windows installer is cross-compiled on Linux and passes the suite under Wine, but it has not been run on real Windows yet. The README says so at the top.</p>
+          <div class="notes">
+            <aside class="note" id="n2">
+              <span class="note-n">2</span>
+              <p>The patch list, applied in order to an unmodified Chromium checkout.</p>
+              <a class="src" href="https://github.com/Jitheswar/JithuBrowser/blob/main/patches/series">patches/series</a>
+            </aside>
+            <aside class="note" id="n3">
+              <span class="note-n">3</span>
+              <p>Runs on a virtual display with a window manager, so tab switches and minimising are real. Point it at stock Chrome as the control.</p>
+              <a class="src" href="https://github.com/Jitheswar/JithuBrowser/blob/main/tests/run-tests.sh">tests/run-tests.sh</a>
+            </aside>
+          </div>
           <p class="stack">C++, Chromium, Python, pytest. Pre-release for Linux and Windows.</p>
           <p class="links"><a href="https://github.com/Jitheswar/JithuBrowser">Code on GitHub</a><a href="https://github.com/Jitheswar/JithuBrowser/releases">Downloads</a><a href="https://github.com/Jitheswar/JithuBrowser/blob/main/docs/DESIGN.md">Design and limits</a></p>
         </div>
-        <div class="margin">
-          <aside class="note" id="n2">
-            <span class="note-n">2</span>
-            <p>The patch list, applied in order to an unmodified Chromium checkout.</p>
-            <a class="src" href="https://github.com/Jitheswar/JithuBrowser/blob/main/patches/series">patches/series</a>
-          </aside>
-          <aside class="note" id="n3">
-            <span class="note-n">3</span>
-            <p>Runs on a virtual display with a window manager, so tab switches and minimising are real. Point it at stock Chrome as the control.</p>
-            <a class="src" href="https://github.com/Jitheswar/JithuBrowser/blob/main/tests/run-tests.sh">tests/run-tests.sh</a>
-          </aside>
-        </div>
-      </article>
+      </div>
+    </article>
 
-      <article class="project row">
-        <div class="main">
+    <article class="scene project" data-shape="cube" data-side="left" data-accent="#9BE06A" style="--accent:#9BE06A">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <p class="idx"><b>02</b> AI teammate</p>
           <h3>Craftie</h3>
           <p class="context">An AI coworker for Minecraft that joins your world as a second player</p>
+          <p class="repo" data-repo="craftie"><span>Updated Nov 2026</span></p>
           <p>Ask it in chat for a house, twenty iron or a set of armor and it works out every step itself: which tool it needs first, where to mine, what to smelt. The rest of the time it follows you, defends you, rescues your items when you die, and keeps itself fed and equipped. Up to four of them can split a big build between them.</p>
           <p>The AI only decides what to do. Pathfinding, mining, crafting, building and fighting are plain code running at game speed, so <a class="claim" href="#n4" data-n="4">most jobs need one AI call<sup>4</sup></a>, and following or fighting need none. It works with Claude, OpenAI, OpenRouter, DeepSeek, or a free local model.</p>
           <h4>What isn't done</h4>
           <p>Survival builds from an empty inventory take twenty minutes or more, because it gathers everything itself. Bedrock Edition is not supported.</p>
+          <div class="notes">
+            <aside class="note" id="n4">
+              <span class="note-n">4</span>
+              <p>The planner gets any item by working backwards through Minecraft's recipes, tools and drops, with no model in the loop.</p>
+              <a class="src" href="https://github.com/Jitheswar/craftie/blob/main/src/body/minecraft/planner.ts">src/body/minecraft/planner.ts</a>
+            </aside>
+          </div>
           <p class="stack">TypeScript, Mineflayer, SQLite, Fabric. A fan project, not affiliated with Mojang or Microsoft.</p>
           <p class="links"><a href="https://github.com/Jitheswar/craftie">Code on GitHub</a></p>
         </div>
-        <div class="margin">
-          <aside class="note" id="n4">
-            <span class="note-n">4</span>
-            <p>The planner gets any item by working backwards through Minecraft's recipes, tools and drops, with no model in the loop.</p>
-            <a class="src" href="https://github.com/Jitheswar/craftie/blob/main/src/body/minecraft/planner.ts">src/body/minecraft/planner.ts</a>
-          </aside>
-        </div>
-      </article>
+      </div>
+    </article>
 
-      <article class="project row">
-        <div class="main">
+    <article class="scene project" data-shape="tree" data-side="right" data-accent="#C9A0FF" style="--accent:#C9A0FF">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <p class="idx"><b>03</b> Compiler</p>
           <h3>NexCC</h3>
           <p class="context">An optimizing compiler for a C subset where nothing is hidden. Built with a teammate.</p>
+          <p class="repo" data-repo="nexcc"><span>Updated Oct 2026</span></p>
           <p>Teaching tools usually show one fragment, such as a regex becoming an automaton, and real compilers bury the classical stages in millions of lines. NexCC keeps the whole path visible in one workbench: tokens, syntax tree, three-address code, control-flow graph, SSA form, each optimization pass as a diff, and the RISC-V assembly that comes out.</p>
           <p>The optimizer runs mem2reg, sparse conditional constant propagation, global value numbering, loop-invariant code motion and dead code elimination. The backend allocates registers by graph coloring and emits RV32IM. A second backend is a bytecode VM that catches out-of-bounds and use-after-free accesses and can <a class="claim" href="#n5" data-n="5">step backwards<sup>5</sup></a> through execution.</p>
+          <div class="demo" id="demo-nexcc" hidden>
+            <p class="demo-h"><b>Try it</b> NexCC's automata lab, running in your browser</p>
+            <div class="demo-fields">
+              <label class="demo-field"><span>Regular expression</span><input type="text" id="nx-re" value="(a|b)*abb" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+              <label class="demo-field"><span>Test string</span><input type="text" id="nx-str" value="aabb" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+            </div>
+            <p class="demo-out" id="nx-out" aria-live="polite"></p>
+            <div class="nx-graph" id="nx-graph"></div>
+            <p class="demo-note">This is the project's own code from <code>src/automata/</code>, unmodified: Thompson's construction, subset construction, then Hopcroft's minimization. The diagram is the minimized DFA.</p>
+          </div>
+          <div class="notes">
+            <aside class="note" id="n5">
+              <span class="note-n">5</span>
+              <p>Each step records a delta, and stepping back undoes it. The 17 tests in <code>test/nexcc.test.js</code> cover every stage, this one included.</p>
+              <a class="src" href="https://github.com/Jitheswar/nexcc/blob/main/src/vm/history.js">src/vm/history.js</a>
+            </aside>
+          </div>
           <p class="stack">JavaScript, Node.js. Includes automata and LL/LR grammar labs.</p>
           <p class="links"><a href="https://github.com/Jitheswar/nexcc">Code on GitHub</a></p>
         </div>
-        <div class="margin">
-          <aside class="note" id="n5">
-            <span class="note-n">5</span>
-            <p>Each step records a delta, and stepping back undoes it. The 17 tests in <code>test/nexcc.test.js</code> cover every stage, this one included.</p>
-            <a class="src" href="https://github.com/Jitheswar/nexcc/blob/main/src/vm/history.js">src/vm/history.js</a>
-          </aside>
-        </div>
-      </article>
+      </div>
+    </article>
 
-      <article class="project row">
-        <div class="main">
+    <article class="scene project" data-shape="eye" data-side="left" data-accent="#FF8A7A" style="--accent:#FF8A7A">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <p class="idx"><b>04</b> Medical imaging</p>
           <h3>Diabetic retinopathy screening</h3>
           <p class="context">Smart India Hackathon 2026, problem statement 26038</p>
+          <p class="repo" data-repo="sih26038"><span>2 stars</span><span>Updated Sep 2026</span></p>
           <p>Give it a photo of the back of the eye and it answers <em>clear</em>, <em>refer</em> or <em>escalate to a person</em>. A ResNet-50 grades the image. A Grad-CAM heatmap of where the model looked is then checked against lesion evidence from two independent detectors, and a rule-based policy escalates whenever the image is poor or the evidence disagrees, instead of trusting the classifier alone.</p>
           <p>At the frozen operating point it reaches <a class="claim" href="#n6" data-n="6">sensitivity 0.982 and specificity 0.917<sup>6</sup></a> on validation. Accuracy alone is never reported.</p>
           <h4>What didn't make it</h4>
           <p>One configuration let the pipeline decide more cases without a person, but it sent <a class="claim" href="#n7" data-n="7">two referable patients home<sup>7</sup></a> where the classifier alone sent none. It was rejected, and the reason is written down as a decision record.</p>
+          <div class="notes">
+            <aside class="note" id="n6">
+              <span class="note-n">6</span>
+              <p>Validation split, referring at a calibrated probability of 0.40 or higher. The internal test split gives 0.960 and 0.917. 95% Wilson intervals are in the design doc.</p>
+              <a class="src" href="https://github.com/Jitheswar/sih26038/blob/master/docs/SIH26038_design.html">docs/SIH26038_design.html</a>
+            </aside>
+            <aside class="note" id="n7">
+              <span class="note-n">7</span>
+              <p>Configuration A12, rejected at equal coverage under the safety veto.</p>
+              <a class="src" href="https://github.com/Jitheswar/sih26038/blob/master/docs/adr/0001-equal-coverage-safety-veto.md">docs/adr/0001-equal-coverage-safety-veto.md</a>
+            </aside>
+          </div>
           <p class="stack">MATLAB, Simulink, ResNet-50, U-Net. A research prototype, not a medical device.</p>
           <p class="links"><a href="https://github.com/Jitheswar/sih26038">Code on GitHub</a><a href="https://github.com/Jitheswar/sih26038/blob/master/docs/SIH26038_design.html">Design document</a></p>
         </div>
-        <div class="margin">
-          <aside class="note" id="n6">
-            <span class="note-n">6</span>
-            <p>Validation split, referring at a calibrated probability of 0.40 or higher. The internal test split gives 0.960 and 0.917. 95% Wilson intervals are in the design doc.</p>
-            <a class="src" href="https://github.com/Jitheswar/sih26038/blob/master/docs/SIH26038_design.html">docs/SIH26038_design.html</a>
-          </aside>
-          <aside class="note" id="n7">
-            <span class="note-n">7</span>
-            <p>Configuration A12, rejected at equal coverage under the safety veto.</p>
-            <a class="src" href="https://github.com/Jitheswar/sih26038/blob/master/docs/adr/0001-equal-coverage-safety-veto.md">docs/adr/0001-equal-coverage-safety-veto.md</a>
-          </aside>
-        </div>
-      </article>
+      </div>
+    </article>
 
-      <article class="project row">
-        <div class="main">
+    <article class="scene project" data-shape="chain" data-side="right" data-accent="#F3C969" style="--accent:#F3C969">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <p class="idx"><b>05</b> Verifiable payments</p>
           <h3>Agent spend policy engine</h3>
           <p class="context">Decides whether an AI agent may pay for something, before any money moves</p>
+          <p class="repo" data-repo="agent-spend-policy-engine"><span>Updated Sep 2026</span></p>
           <p>Approved payments settle for real on Algorand testnet through the x402 protocol: request, get a 402, pay, retry, get a 200. The APIs behind the paywall are real too, with live weather from Open-Meteo and company lookups from SEC EDGAR.</p>
           <p>Every decision, allowed or blocked, goes into a log where each entry carries the hash of the one before it, and the latest hash is written to Algorand. Anyone can confirm the record wasn't rewritten in <a class="claim" href="#n8" data-n="8">about ten seconds<sup>8</sup></a>, without trusting whoever runs the system. The dashboard has a button that tampers with a past record, and verification names the exact entry that changed.</p>
+          <div class="demo" id="demo-chain" hidden>
+            <p class="demo-h"><b>Try it</b> Change a past record, then verify the log</p>
+            <ol class="chain" id="chain-list"></ol>
+            <p class="demo-actions"><button type="button" id="chain-tamper">Tamper with a record</button><button type="button" id="chain-verify">Verify</button><button type="button" id="chain-reset">Reset</button></p>
+            <p class="demo-out" id="chain-out" aria-live="polite"></p>
+            <p class="demo-note">Real SHA-256, computed in your browser, on made-up entries. Each entry's hash covers its contents and the hash before it. The project also writes the latest hash to Algorand, so even the log's owner can't quietly rebuild the chain.</p>
+          </div>
           <p>A new reader can go from <code>git clone</code> to a paid API call in <a class="claim" href="#n9" data-n="9">about fifteen minutes<sup>9</sup></a>.</p>
+          <div class="notes">
+            <aside class="note" id="n8">
+              <span class="note-n">8</span>
+              <p>Recomputes every hash, then checks each anchor against the public AlgoNode indexer. It exits 0 only if the chain is intact and confirmed on-chain.</p>
+              <a class="src" href="https://github.com/Jitheswar/agent-spend-policy-engine/blob/master/scripts/verify_audit.py">scripts/verify_audit.py</a>
+            </aside>
+            <aside class="note" id="n9">
+              <span class="note-n">9</span>
+              <p>A step-by-step walkthrough from an empty machine to a settled payment.</p>
+              <a class="src" href="https://github.com/Jitheswar/agent-spend-policy-engine/blob/master/GETTING_STARTED.md">GETTING_STARTED.md</a>
+            </aside>
+          </div>
           <p class="stack">FastAPI, Pydantic, Algorand, x402, testnet USDC.</p>
           <p class="links"><a href="https://github.com/Jitheswar/agent-spend-policy-engine">Code on GitHub</a></p>
         </div>
-        <div class="margin">
-          <aside class="note" id="n8">
-            <span class="note-n">8</span>
-            <p>Recomputes every hash, then checks each anchor against the public AlgoNode indexer. It exits 0 only if the chain is intact and confirmed on-chain.</p>
-            <a class="src" href="https://github.com/Jitheswar/agent-spend-policy-engine/blob/master/scripts/verify_audit.py">scripts/verify_audit.py</a>
-          </aside>
-          <aside class="note" id="n9">
-            <span class="note-n">9</span>
-            <p>A step-by-step walkthrough from an empty machine to a settled payment.</p>
-            <a class="src" href="https://github.com/Jitheswar/agent-spend-policy-engine/blob/master/GETTING_STARTED.md">GETTING_STARTED.md</a>
-          </aside>
-        </div>
-      </article>
+      </div>
+    </article>
 
-      <article class="project row">
-        <div class="main">
+    <article class="scene project" data-shape="leaf" data-side="left" data-accent="#5FD3A8" style="--accent:#5FD3A8">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <p class="idx"><b>06</b> Offline classifier</p>
           <h3>Ayur-Ai</h3>
           <p class="context">Names an Ayurvedic medicinal leaf from a photo, then looks up what it's used for</p>
+          <p class="repo" data-repo="Ayur-Ai"><span>Updated Sep 2026</span></p>
           <p>A ResNet18 fine-tuned in PyTorch identifies 30 species, and a TF-IDF search over a herb knowledge base finds their uses or matches herbs to a symptom. It runs fully offline, with no LLM and no API keys, and trains in about two minutes on a laptop GPU.</p>
           <p>Many photos in the dataset show the same physical leaf, so near-duplicates are grouped and kept on one side of every split. Under that rule it scores <a class="claim" href="#n10" data-n="10">98.64% accuracy<sup>10</sup></a> in 5-fold cross-validation. A single split swings <a class="claim" href="#n11" data-n="11">between 0.87 and 1.00<sup>11</sup></a> depending on the random seed, which is why the cross-validated number is the one quoted.</p>
+          <div class="notes">
+            <aside class="note" id="n10">
+              <span class="note-n">10</span>
+              <p>Mendeley Medicinal Leaf Dataset, 1,835 images. Macro F1 0.9849.</p>
+              <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/cv_eval.py">experiments/cv_eval.py</a>
+            </aside>
+            <aside class="note" id="n11">
+              <span class="note-n">11</span>
+              <p>One line per seed, with the split and the score it produced.</p>
+              <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/multiseed.jsonl">experiments/multiseed.jsonl</a>
+            </aside>
+          </div>
           <p class="stack">PyTorch, scikit-learn, Streamlit. Educational, not medical advice.</p>
           <p class="links"><a href="https://github.com/Jitheswar/Ayur-Ai">Code on GitHub</a></p>
         </div>
-        <div class="margin">
-          <aside class="note" id="n10">
-            <span class="note-n">10</span>
-            <p>Mendeley Medicinal Leaf Dataset, 1,835 images. Macro F1 0.9849.</p>
-            <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/cv_eval.py">experiments/cv_eval.py</a>
-          </aside>
-          <aside class="note" id="n11">
-            <span class="note-n">11</span>
-            <p>One line per seed, with the split and the score it produced.</p>
-            <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/multiseed.jsonl">experiments/multiseed.jsonl</a>
-          </aside>
-        </div>
-      </article>
+      </div>
+    </article>
 
-      <div class="also">
-        <h3 class="also-h">Also built</h3>
-        <ul>
-          <li>
-            <a class="also-name" href="https://github.com/Jitheswar/RSNA">RSNA knee MRI</a>
+    <section class="scene spread" data-shape="field" data-side="center" data-dim="0.5" aria-labelledby="also-h">
+      <div class="wrap">
+        <h2 id="also-h" data-reveal>Also built</h2>
+        <ul class="cards">
+          <li class="card tilt" data-reveal>
+            <a class="card-name" href="https://github.com/Jitheswar/RSNA">RSNA knee MRI</a>
+            <p class="repo" data-repo="RSNA"><span>Updated Oct 2026</span></p>
             <p>Our team's entry for the RSNA 2026 Kaggle competition: 12 findings on knee MRI, with 4,407 studies and only 58 reference labels. Public leaderboard AUC 0.958, blended with two credited public pipelines.</p>
             <p class="stack">PyTorch, ConvNeXt, Slurm</p>
           </li>
-          <li>
-            <a class="also-name" href="https://github.com/Jitheswar/onepass-zsc">onepass-zsc</a>
+          <li class="card tilt" data-reveal>
+            <a class="card-name" href="https://github.com/Jitheswar/onepass-zsc">onepass-zsc</a>
+            <p class="repo" data-repo="onepass-zsc"><span>Updated Oct 2026</span></p>
             <p>Zero-shot text classification that scores every label in one forward pass. More accurate than its per-label backbone on 13 unseen datasets and 1.5x faster on CPU. Team project.</p>
             <p class="stack">PyTorch, DeBERTa-v3</p>
           </li>
-          <li>
-            <a class="also-name" href="https://github.com/Jitheswar/aidevops">AIDevOps</a>
+          <li class="card tilt" data-reveal>
+            <a class="card-name" href="https://github.com/Jitheswar/aidevops">AIDevOps</a>
+            <p class="repo" data-repo="aidevops"><span>Updated Sep 2026</span></p>
             <p>Ranks vulnerabilities in a live Kubernetes cluster by how exposed each workload is right now, not only by its CVE score. Team project.</p>
             <p class="stack">Kubernetes, FastAPI, Prometheus</p>
           </li>
@@ -229,106 +302,118 @@
       </div>
     </section>
 
-    <section class="wrap section" id="opensource" aria-labelledby="opensource-h">
-      <h2 id="opensource-h">Open source</h2>
-      <p class="section-intro">Fixes merged into Zephyr, the real-time operating system used on microcontrollers.</p>
-      <div class="also also-plain">
-        <ul>
-          <li>
-            <a class="also-name" href="https://github.com/zephyrproject-rtos/zephyr/pull/123434">DNS resolver</a>
-            <p>The resolver rejected answers whose names had a label of exactly 63 octets, the longest the DNS standard allows. Fixed the bound and added a test for it.</p>
-            <p class="stack">C · zephyr #123434 · merged</p>
-          </li>
-          <li>
-            <a class="also-name" href="https://github.com/zephyrproject-rtos/zephyr/pull/123198">Build system</a>
-            <p>Zephyr failed to link on hosts whose GCC turns the stack protector on by default, such as Arch Linux. Builds without stack canaries now switch it off explicitly.</p>
-            <p class="stack">CMake · zephyr #123198 · merged</p>
-          </li>
-        </ul>
+    <section class="scene" id="opensource" data-shape="chip" data-side="left" data-accent="#7FD6E8" style="--accent:#7FD6E8" aria-labelledby="opensource-h">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <p class="idx"><b>Merged</b> upstream</p>
+          <h2 id="opensource-h">Open source</h2>
+          <p class="section-intro">Fixes merged into Zephyr, the real-time operating system used on microcontrollers.</p>
+          <ul class="merged">
+            <li>
+              <a class="card-name" href="https://github.com/zephyrproject-rtos/zephyr/pull/123434">DNS resolver</a>
+              <p>The resolver rejected answers whose names had a label of exactly 63 octets, the longest the DNS standard allows. Fixed the bound and added a test for it.</p>
+              <p class="stack">C · zephyr #123434 · merged Oct 2026</p>
+            </li>
+            <li>
+              <a class="card-name" href="https://github.com/zephyrproject-rtos/zephyr/pull/123198">Build system</a>
+              <p>Zephyr failed to link on hosts whose GCC turns the stack protector on by default, such as Arch Linux. Builds without stack canaries now switch it off explicitly.</p>
+              <p class="stack">CMake · zephyr #123198 · merged Oct 2026</p>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
 
-    <section class="wrap section" id="desktop" aria-labelledby="desktop-h">
-      <h2 id="desktop-h">On my own machine</h2>
-      <p class="section-intro">Two themes for Omarchy, the Arch and Hyprland setup I use every day. This page can wear either of them.</p>
+    <section class="scene spread" id="desktop" data-shape="panes" data-side="center" data-dim="0.4" aria-labelledby="desktop-h">
+      <div class="wrap">
+        <h2 id="desktop-h" data-reveal>On my own machine</h2>
+        <p class="section-intro" data-reveal>Two themes for Omarchy, the Arch and Hyprland setup I use every day. This page can wear either of them.</p>
 
-      <article class="theme-piece">
-        <figure class="shot">
-          <img src="assets/omarchy-liquid-glass-theme.webp" width="1600" height="900" loading="lazy" alt="Liquid Glass on a green wallpaper: the bar, terminal and info panel are clear glass that takes its color from the wallpaper behind it.">
-        </figure>
-        <div class="row">
-          <div class="main">
-            <h3>Liquid Glass <span class="stars" data-repo="omarchy-liquid-glass-theme">17 stars</span></h3>
+        <article class="theme-piece">
+          <figure class="shot">
+            <img src="assets/omarchy-liquid-glass-theme.webp" width="1600" height="900" loading="lazy" alt="Liquid Glass on a green wallpaper: the bar, terminal and info panel are clear glass that takes its color from the wallpaper behind it.">
+          </figure>
+          <div class="panel" data-reveal>
+            <h3>Liquid Glass</h3>
+            <p class="repo" data-repo="omarchy-liquid-glass-theme"><span>17 stars</span><span>2 forks</span><span>Updated Sep 2026</span></p>
             <p>Most Omarchy themes are a color palette. This one is a material. The bar, launcher, notifications and window borders are only white and black at low opacity, so they pick up their color from whatever is behind them. Terminal windows stay readable through the glass, with text contrast at a median of <a class="claim" href="#n12" data-n="12">14.6:1<sup>12</sup></a>.</p>
+            <div class="notes">
+              <aside class="note" id="n12">
+                <span class="note-n">12</span>
+                <p>At terminal opacity 0.74, against 14.9:1 when fully opaque. The README also lists what hasn't been tested yet.</p>
+                <a class="src" href="https://github.com/Jitheswar/omarchy-liquid-glass-theme#requirements">README.md, Requirements</a>
+              </aside>
+            </div>
             <p class="links"><a href="https://github.com/Jitheswar/omarchy-liquid-glass-theme">Code on GitHub</a><button type="button" class="wear" data-set-theme="glass">Use it on this page</button></p>
           </div>
-          <div class="margin">
-            <aside class="note" id="n12">
-              <span class="note-n">12</span>
-              <p>At terminal opacity 0.74, against 14.9:1 when fully opaque. The README also lists what hasn't been tested yet.</p>
-              <a class="src" href="https://github.com/Jitheswar/omarchy-liquid-glass-theme#requirements">README.md, Requirements</a>
-            </aside>
-          </div>
-        </div>
-      </article>
+        </article>
 
-      <article class="theme-piece">
-        <figure class="shot">
-          <img src="assets/sadie-my-love.webp" width="1600" height="900" loading="lazy" alt="Sadie My Love: copper and oxblood colors across an editor, a system monitor, a terminal and a file manager.">
-        </figure>
-        <div class="row">
-          <div class="main">
-            <h3>Sadie My Love <span class="stars" data-repo="sadie-my-love"></span></h3>
+        <article class="theme-piece">
+          <figure class="shot">
+            <img src="assets/sadie-my-love.webp" width="1600" height="900" loading="lazy" alt="Sadie My Love: copper and oxblood colors across an editor, a system monitor, a terminal and a file manager.">
+          </figure>
+          <div class="panel" data-reveal>
+            <h3>Sadie My Love</h3>
+            <p class="repo" data-repo="sadie-my-love"><span>1 star</span><span>Updated Sep 2026</span></p>
             <p>A copper and oxblood theme whose colors follow the wallpaper without turning into something else. Each wallpaper rotates the hue of one hand-tuned palette in Oklch, and the rotation is <a class="claim" href="#n13" data-n="13">capped at 28 degrees<sup>13</sup></a> so every text color keeps at least 4.5:1 contrast. No file in the theme has a color written into it by hand.</p>
+            <div class="notes">
+              <aside class="note" id="n13">
+                <span class="note-n">13</span>
+                <p>Only 70% of the wallpaper's hue offset is applied, and near-gray colors rotate less so text doesn't pick up a tint.</p>
+                <a class="src" href="https://github.com/Jitheswar/sadie-my-love/blob/main/bin/generate-palettes">bin/generate-palettes</a>
+              </aside>
+            </div>
             <p class="links"><a href="https://github.com/Jitheswar/sadie-my-love">Code on GitHub</a><button type="button" class="wear" data-set-theme="sadie">Use it on this page</button></p>
           </div>
-          <div class="margin">
-            <aside class="note" id="n13">
-              <span class="note-n">13</span>
-              <p>Only 70% of the wallpaper's hue offset is applied, and near-gray colors rotate less so text doesn't pick up a tint.</p>
-              <a class="src" href="https://github.com/Jitheswar/sadie-my-love/blob/main/bin/generate-palettes">bin/generate-palettes</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="scene" id="method" data-shape="field" data-side="right" aria-labelledby="method-h">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <h2 id="method-h">How I work</h2>
+          <p class="principle">I'd rather publish a failed result than a number nobody can reproduce.</p>
+          <p>My projects keep a written record of what was tried and dropped, not only what shipped. Ayur-Ai's experiment journal logs <a class="claim" href="#n14" data-n="14">three optimizations that didn't work<sup>14</sup></a> and where each one stopped. The screening project records the goals it missed next to the ones it met.</p>
+          <div class="notes">
+            <aside class="note" id="n14">
+              <span class="note-n">14</span>
+              <p>Each entry says what was tried, what it measured, and why it was dropped.</p>
+              <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/journal.md">experiments/journal.md</a>
             </aside>
           </div>
+          <dl class="tools">
+            <div><dt>Languages</dt><dd>Python, TypeScript, JavaScript, C++, MATLAB, Shell</dd></div>
+            <div><dt>Machine learning</dt><dd>PyTorch, scikit-learn, ResNet, ConvNeXt, DeBERTa, Grad-CAM</dd></div>
+            <div><dt>Systems</dt><dd>Chromium, compilers and RISC-V, FastAPI, SQLite</dd></div>
+            <div><dt>Infrastructure</dt><dd>Docker, Kubernetes, Prometheus, pytest, uv</dd></div>
+          </dl>
         </div>
-      </article>
-    </section>
-
-    <section class="wrap section row" id="method" aria-labelledby="method-h">
-      <h2 id="method-h">How I work</h2>
-      <div class="main">
-        <p class="principle">I'd rather publish a failed result than a number nobody can reproduce.</p>
-        <p>My projects keep a written record of what was tried and dropped, not only what shipped. Ayur-Ai's experiment journal logs <a class="claim" href="#n14" data-n="14">three optimizations that didn't work<sup>14</sup></a> and where each one stopped. The screening project records the goals it missed next to the ones it met.</p>
-        <dl class="tools">
-          <div><dt>Languages</dt><dd>Python, TypeScript, JavaScript, C++, MATLAB, Shell</dd></div>
-          <div><dt>Machine learning</dt><dd>PyTorch, scikit-learn, ResNet, ConvNeXt, DeBERTa, Grad-CAM</dd></div>
-          <div><dt>Systems</dt><dd>Chromium, compilers and RISC-V, FastAPI, SQLite</dd></div>
-          <div><dt>Infrastructure</dt><dd>Docker, Kubernetes, Prometheus, pytest, uv</dd></div>
-        </dl>
-      </div>
-      <div class="margin">
-        <aside class="note" id="n14">
-          <span class="note-n">14</span>
-          <p>Each entry says what was tried, what it measured, and why it was dropped.</p>
-          <a class="src" href="https://github.com/Jitheswar/Ayur-Ai/blob/main/experiments/journal.md">experiments/journal.md</a>
-        </aside>
       </div>
     </section>
 
-    <section class="wrap section contact" id="contact" aria-labelledby="contact-h">
-      <h2 id="contact-h">Contact</h2>
-      <p class="section-intro">LinkedIn is the fastest way to reach me. For code, start with GitHub.</p>
-      <ul class="contact-links">
-        <li><a href="https://linkedin.com/in/jitheswar">LinkedIn<span>linkedin.com/in/jitheswar</span></a></li>
-        <li><a href="https://github.com/Jitheswar">GitHub<span>github.com/Jitheswar</span></a></li>
-        <li><a href="https://leetcode.com/u/Jitheswar/">LeetCode<span>leetcode.com/u/Jitheswar</span></a></li>
-      </ul>
+    <section class="scene" id="contact" data-shape="check" data-side="right" aria-labelledby="contact-h">
+      <div class="wrap">
+        <div class="panel" data-reveal>
+          <h2 id="contact-h">Contact</h2>
+          <p class="section-intro">Email or LinkedIn is the fastest way to reach me. For code, start with GitHub.</p>
+          <ul class="contact-links">
+            <li><a href="mailto:jitheswaredu@gmail.com">Email<span>jitheswaredu@gmail.com</span></a></li>
+            <li><a href="https://linkedin.com/in/jitheswar">LinkedIn<span>linkedin.com/in/jitheswar</span></a></li>
+            <li><a href="https://github.com/Jitheswar">GitHub<span>github.com/Jitheswar</span></a></li>
+            <li><a href="https://leetcode.com/u/Jitheswar/">LeetCode<span>leetcode.com/u/Jitheswar</span></a></li>
+          </ul>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer class="wrap site-foot">
-    <p>Written by hand in HTML and CSS, hosted on GitHub Pages. <a href="https://github.com/Jitheswar/Jitheswar.github.io">Source</a></p>
+    <p>Written by hand in HTML, CSS and WebGL, with no libraries. Hosted on GitHub Pages. <a href="https://github.com/Jitheswar/Jitheswar.github.io">Source</a></p>
   </footer>
 
+  <script src="scene.js" defer></script>
   <script src="main.js" defer></script>
+  <script src="demos.js" defer></script>
 </body>
 </html>

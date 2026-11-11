@@ -1,25 +1,11 @@
 /* ------------------------------------------------------------------
    Themes
-   notebook  pale sage paper, ultramarine citations, highlighter yellow
-   sadie     Sadie My Love palette, from that repo's colors.toml
+   sadie     Sadie My Love palette, from that repo's colors.toml (default)
    glass     Liquid Glass material tokens, from that repo's colors.toml
+   notebook  pale sage paper, ultramarine citations, highlighter yellow
    ------------------------------------------------------------------ */
 
 :root,
-[data-theme="notebook"] {
-  --bg: #E6EAE7;
-  --ink: #17201D;
-  --muted: #55625D;
-  --rule: #C2CBC6;
-  --signal: #2440C8;
-  --marker: #F3D54E;
-  --marker-ink: #17201D;
-  --note-bg: transparent;
-  --note-edge: var(--rule);
-  --shot-edge: #17201D;
-  color-scheme: light;
-}
-
 [data-theme="sadie"] {
   --bg: #171314;
   --ink: #E8DDD4;
@@ -28,9 +14,14 @@
   --signal: #E08A63;
   --marker: #54313A;
   --marker-ink: #FAF5F1;
-  --note-bg: #211A1C;
-  --note-edge: #C9714F;
+  --card: rgba(29, 23, 25, 0.9);
+  --card-edge: #3A2E30;
   --shot-edge: #2B2224;
+  --good: #7FD99A;
+  --bad: #FF8A7A;
+  --accent-mix: 100%;
+  --aura: 0.13;
+  --live: 224 138 99;
   color-scheme: dark;
 }
 
@@ -42,10 +33,30 @@
   --signal: #96CFE8;
   --marker: rgba(245, 226, 168, 0.32);
   --marker-ink: #FFFFFF;
-  --note-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.28) 45%, rgba(0, 0, 0, 0.35));
-  --note-edge: rgba(255, 255, 255, 0.21);
+  --card: rgba(14, 16, 15, 0.82);
+  --card-edge: rgba(255, 255, 255, 0.21);
   --shot-edge: rgba(255, 255, 255, 0.21);
+  --accent-mix: 100%;
+  --aura: 0.1;
   color-scheme: dark;
+}
+
+[data-theme="notebook"] {
+  --bg: #E6EAE7;
+  --ink: #17201D;
+  --muted: #55625D;
+  --rule: #C2CBC6;
+  --signal: #2440C8;
+  --marker: #F3D54E;
+  --marker-ink: #17201D;
+  --card: rgba(236, 240, 237, 0.92);
+  --card-edge: #C2CBC6;
+  --shot-edge: #17201D;
+  --good: #1B7A3E;
+  --bad: #B3261E;
+  --accent-mix: 42%;
+  --aura: 0.16;
+  color-scheme: light;
 }
 
 /* ------------------------------------------------------------------
@@ -65,21 +76,23 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: "Newsreader", Georgia, serif;
-  font-size: 1.1875rem;
+  font-size: 1.125rem;
   line-height: 1.6;
   font-optical-sizing: auto;
+  overflow-x: clip;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 h1, h2, h3, h4,
-.wordmark, nav, .theme-switch, .context, .stack, .links,
-.note, .facts, .tools dt, .also-name, .contact-links, .site-foot, .how-to, .skip {
+.wordmark, nav, .theme-switch, .eyebrow, .idx, .context, .stack, .links, .repo, .demo,
+.note, .facts, .tools dt, .card-name, .contact-links, .site-foot, .how-to, .skip, .chapter p {
   font-family: "Schibsted Grotesk", system-ui, sans-serif;
 }
 
 img { display: block; max-width: 100%; height: auto; }
-
 a { color: inherit; }
+p { margin: 0 0 1rem; }
+[hidden] { display: none !important; }
 
 code {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -106,23 +119,47 @@ code {
 
 .wrap {
   width: 100%;
-  max-width: 78rem;
+  max-width: 82rem;
   margin-inline: auto;
   padding-inline: clamp(1rem, 4vw, 3rem);
 }
 
-/* Two columns: reading text on the left, citations in the margin. */
-.row > .main { min-width: 0; }
-.row > .margin { min-width: 0; }
+/* ------------------------------------------------------------------
+   The 3D layer: a glow that follows the current object's colour, then
+   the canvas, both fixed behind the page.
+   ------------------------------------------------------------------ */
 
-@media (min-width: 60rem) {
-  .row {
-    display: grid;
-    grid-template-columns: minmax(0, 40rem) minmax(0, 1fr);
-    column-gap: clamp(2.5rem, 6vw, 6rem);
-  }
-  .row > .margin { padding-top: 0.35rem; }
+.backdrop { display: none; }
+
+.aura,
+#scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
+.aura {
+  background:
+    radial-gradient(58% 52% at 74% 36%, rgb(var(--live) / var(--aura)), transparent 72%),
+    radial-gradient(46% 44% at 10% 92%, rgb(var(--live) / calc(var(--aura) * 0.55)), transparent 72%);
+}
+/* Fine grain over the glow. It hides the banding that faint gradients show on dark screens. */
+.aura::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.11;
+}
+#scene {
+  display: none;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+}
+.has-scene #scene { display: block; }
+
+.site-head, main, .site-foot { position: relative; z-index: 1; }
 
 /* ------------------------------------------------------------------
    Header
@@ -132,46 +169,50 @@ code {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--rule);
 }
-
 .head-inner {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  min-height: 3.75rem;
+  min-height: 3.5rem;
 }
-
 .wordmark {
   font-weight: 800;
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   letter-spacing: -0.02em;
   text-decoration: none;
 }
-
 nav {
   display: flex;
   gap: 1.25rem;
-  margin-right: auto;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 }
-nav a {
-  color: var(--muted);
-  text-decoration: none;
-}
+nav a { color: var(--muted); text-decoration: none; }
 nav a:hover { color: var(--ink); }
+
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--signal);
+  transform: scaleX(var(--scroll, 0));
+  transform-origin: 0 50%;
+}
 
 .theme-switch {
   display: flex;
   gap: 0.25rem;
+  margin-left: auto;
   padding: 0.2rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
 }
-
 .theme-switch button {
   display: inline-flex;
   align-items: center;
@@ -186,10 +227,7 @@ nav a:hover { color: var(--ink); }
   cursor: pointer;
 }
 .theme-switch button:hover { color: var(--ink); }
-.theme-switch button[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--bg);
-}
+.theme-switch button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 
 .sw {
   width: 1.1rem;
@@ -202,76 +240,234 @@ nav a:hover { color: var(--ink); }
 .sw-sadie    { background: conic-gradient(#C9714F 0 33%, #54313A 0 66%, #171314 0); }
 .sw-glass    { background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.9), rgba(111,191,122,.6) 45%, #0A0A0A 75%); }
 
-@media (max-width: 40rem) {
+@media (max-width: 52rem) {
   nav { display: none; }
-  .wordmark { margin-right: auto; }
-  .sw-label { display: none; }
-  .theme-switch button { padding: 0.3rem; }
 }
+@media (max-width: 30rem) {
+  .sw-label { display: none; }
+  .theme-switch button { padding: 0.45rem; }
+  .sw { width: 1.3rem; height: 1.3rem; }
+}
+
+/* ------------------------------------------------------------------
+   Scenes: one screen each. On wide screens the text takes one half and
+   the object the other. On narrow screens the object gets an open
+   stretch of screen first, then the text slides over it on a card.
+   ------------------------------------------------------------------ */
+
+.scene {
+  --accent-ink: color-mix(in srgb, var(--accent, var(--signal)) var(--accent-mix), var(--ink));
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-block: clamp(4rem, 11vh, 7.5rem);
+}
+
+.panel { max-width: 36rem; }
+
+.stage { display: none; }
+
+@media (min-width: 60rem) {
+  .scene[data-side="left"] .panel { margin-left: auto; }
+}
+
+@media (max-width: 59.99rem) {
+  .scene { align-items: flex-start; min-height: 0; padding-block: 2.5rem; }
+  .hero { min-height: 100vh; min-height: 100svh; }
+  .panel,
+  .card {
+    max-width: none;
+    padding: 1.4rem 1.2rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 1.25rem;
+  }
+  .has-scene .scene.project,
+  .has-scene #opensource,
+  .has-scene #method,
+  .has-scene #contact { padding-top: 62vh; padding-top: 62svh; }
+  .has-scene .spread { padding-top: 34vh; padding-top: 34svh; }
+  .has-scene .hero .stage { display: block; height: 46vh; height: 46svh; }
+}
+
+/* Things rise into place the first time they are seen. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 2rem, 0);
+  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.js [data-reveal].in { opacity: 1; transform: none; }
 
 /* ------------------------------------------------------------------
    Hero
    ------------------------------------------------------------------ */
 
-.hero {
-  padding-top: clamp(3.5rem, 10vw, 8rem);
-  padding-bottom: clamp(3rem, 7vw, 5.5rem);
+.hero { padding-top: clamp(2.5rem, 8vh, 6rem); }
+.hero .panel { max-width: 33rem; }
+
+.eyebrow {
+  margin: 0 0 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-.hero h1 {
-  grid-column: 1 / -1;
-  margin: 0 0 clamp(1.75rem, 4vw, 3rem);
-  font-size: clamp(3.1rem, 10.5vw, 9rem);
+h1 {
+  margin: 0 0 clamp(1.5rem, 4vh, 2.5rem);
+  max-width: 44rem;
+  font-size: clamp(3.1rem, 7.4vw, 6.6rem);
   font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.055em;
-  max-width: 11ch;
+  line-height: 0.93;
+  letter-spacing: -0.05em;
   text-wrap: balance;
 }
+h1 .claim { text-decoration-thickness: 0.06em; text-underline-offset: 0.14em; }
+h1 .claim sup { font-size: 0.26em; vertical-align: 2.2em; letter-spacing: 0; }
 
-.hero h1 .claim {
-  text-decoration-thickness: 0.06em;
-  text-underline-offset: 0.12em;
-}
-.hero h1 .claim sup {
-  font-size: 0.28em;
-  font-weight: 700;
-  letter-spacing: 0;
-  vertical-align: super;
-  margin-left: 0.08em;
-  top: -1.4em;
-  position: relative;
-}
-
-.lede {
-  margin: 0 0 1.25rem;
-  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
-  line-height: 1.5;
-}
+.lede { font-size: clamp(1.15rem, 1.6vw, 1.35rem); line-height: 1.5; }
 
 .how-to {
-  margin: 0;
-  max-width: 34rem;
-  font-size: 0.95rem;
+  font-size: 0.86rem;
   line-height: 1.5;
   color: var(--muted);
 }
 
-.facts {
-  margin: 2rem 0 0;
-  font-size: 0.9rem;
-  line-height: 1.45;
+.facts { margin: 1.5rem 0 0; font-size: 0.9rem; }
+.facts div {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--rule);
 }
-.facts div { padding: 0.6rem 0; border-top: 1px solid var(--rule); }
 .facts dt { color: var(--muted); }
-.facts dd { margin: 0.1rem 0 0; }
-
-@media (max-width: 59.99rem) {
-  .hero .margin { margin-top: 2rem; }
-}
+.facts dd { margin: 0; }
 
 /* ------------------------------------------------------------------
-   Citations: the marked claim and its margin note
+   Section and project text
+   ------------------------------------------------------------------ */
+
+.chapter {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(3rem, 9vh, 6rem) 0;
+}
+.chapter h2 { margin-bottom: 0.5rem; }
+.chapter p { margin: 0; max-width: 34rem; color: var(--muted); font-size: 1rem; }
+
+h2 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+h3 {
+  margin: 0 0 0.4rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+h4 {
+  margin: 1.5rem 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.idx {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.idx b {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--accent-ink);
+  border-radius: 999px;
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+.context {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.section-intro {
+  max-width: 36rem;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.stack {
+  margin: 1.25rem 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.1rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.links a,
+.wear {
+  padding: 0.6rem 1.05rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.links a:first-child { background: var(--ink); color: var(--bg); }
+.links a:first-child:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
+.links a:not(:first-child):hover,
+.wear:hover,
+.wear[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.wear[aria-pressed="true"] { cursor: default; }
+
+/* Stars, forks and last activity, straight from GitHub. */
+.repo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: -0.5rem 0 1.25rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+.repo:empty { display: none; }
+.repo span {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--card-edge);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.card .repo { margin: 0.7rem 0 0; }
+.theme-piece .repo { margin: -0.4rem 0 1rem; }
+
+/* ------------------------------------------------------------------
+   Citations
    ------------------------------------------------------------------ */
 
 .claim {
@@ -282,7 +478,6 @@ nav a:hover { color: var(--ink); }
   background-image: linear-gradient(var(--marker), var(--marker));
   background-repeat: no-repeat;
   background-size: 0% 100%;
-  background-position: 0 0;
   border-radius: 2px;
   transition: background-size 0.35s ease, color 0.2s ease;
 }
@@ -300,188 +495,91 @@ nav a:hover { color: var(--ink); }
   color: var(--marker-ink);
 }
 
+.notes {
+  display: grid;
+  gap: 0.6rem;
+  margin: 1.4rem 0 0;
+}
 .note {
   position: relative;
-  margin: 0 0 1.25rem;
-  padding: 0.15rem 0 0.15rem 2.1rem;
-  background: var(--note-bg);
-  border-left: 1px solid var(--note-edge);
-  font-size: 0.875rem;
-  line-height: 1.5;
+  padding: 0.7rem 0.9rem 0.7rem 2.5rem;
+  border: 1px solid var(--card-edge);
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  font-size: 0.82rem;
+  line-height: 1.45;
   color: var(--muted);
-  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  scroll-margin-top: 6rem;
+  transition: border-color 0.25s ease, color 0.25s ease;
 }
-.note p { margin: 0 0 0.35rem; }
-
+.note p { margin: 0 0 0.3rem; }
 .note-n {
   position: absolute;
-  left: 0.7rem;
-  top: 0.15rem;
+  left: 0.9rem;
+  top: 0.7rem;
   font-weight: 700;
   color: var(--signal);
 }
-
-.note .src {
+.src {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   color: var(--signal);
   text-decoration: none;
   overflow-wrap: anywhere;
 }
-.note .src:hover { text-decoration: underline; }
-
+.src:hover { text-decoration: underline; }
 .note.is-lit,
-.note:target {
-  color: var(--ink);
-  border-left-color: var(--signal);
-  box-shadow: -3px 0 0 var(--signal);
-}
-
-/* On narrow screens notes sit under the paragraph they cite. */
-@media (max-width: 59.99rem) {
-  .project .margin, #method .margin, .theme-piece .margin { margin-top: 1.25rem; }
-}
+.note:target { border-color: var(--signal); color: var(--ink); }
 
 /* ------------------------------------------------------------------
-   Sections
+   Demos that run in the page
    ------------------------------------------------------------------ */
 
-.section {
-  padding-top: clamp(3rem, 6vw, 5rem);
-  padding-bottom: clamp(1rem, 3vw, 2rem);
+.demo {
+  margin: 1.6rem 0;
+  padding: 1.1rem 1.1rem 1.2rem;
+  border: 1px solid var(--accent-ink);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
-
-.section h2,
-#method h2 {
-  margin: 0 0 clamp(2rem, 4vw, 3rem);
-  padding-top: 1rem;
-  border-top: 2px solid var(--ink);
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+.demo p { margin: 0; }
+.demo .demo-h { margin: 0 0 0.9rem; font-size: 0.95rem; font-weight: 600; }
+.demo-h b {
+  margin-right: 0.5rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--accent-ink);
+  color: var(--bg);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: 0.1em;
 }
-#method h2 { grid-column: 1 / -1; }
+.demo .demo-note { margin: 0.9rem 0 0; font-size: 0.78rem; color: var(--muted); }
+.demo .demo-out { margin: 0.8rem 0 0; min-height: 1.3em; }
+.demo-out.ok, .demo-out .ok { color: var(--good); }
+.demo-out.bad, .demo-out .bad { color: var(--bad); }
 
-.section-intro {
-  margin: -1.25rem 0 2.5rem;
-  max-width: 40rem;
-  color: var(--muted);
+.demo-fields { display: grid; gap: 0.7rem; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+.demo-field { display: grid; gap: 0.3rem; margin: 0; font-size: 0.78rem; color: var(--muted); }
+.probe + .demo-field { margin-top: 0.9rem; }
+.demo-field input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--card-edge);
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  color: var(--ink);
+  font: 1rem ui-monospace, "SF Mono", Menlo, Consolas, monospace; /* 16px, so phones don't zoom on focus */
 }
+.demo-field input:focus-visible { outline-offset: 0; border-color: var(--signal); }
 
-/* Projects */
-
-.project { padding-bottom: clamp(2.5rem, 5vw, 4rem); }
-.project + .project {
-  padding-top: clamp(2.5rem, 5vw, 4rem);
-  border-top: 1px solid var(--rule);
-}
-
-.project h3,
-.theme-piece h3 {
-  margin: 0;
-  font-size: clamp(1.6rem, 3vw, 2.15rem);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1.1;
-}
-
-.context {
-  margin: 0.4rem 0 1.25rem;
-  font-size: 1rem;
-  color: var(--muted);
-  line-height: 1.4;
-}
-
-.main > p { margin: 0 0 1rem; }
-
-.project h4 {
-  margin: 1.75rem 0 0.4rem;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.stack {
-  margin-top: 1.5rem !important;
-  font-size: 0.9rem;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-.links a {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.25em;
-}
-.links a:hover { color: var(--signal); }
-
-/* Also built */
-
-.also {
-  margin-top: clamp(1rem, 3vw, 2rem);
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-.also-h {
-  margin: 0 0 1.5rem;
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-.also ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 2rem clamp(2rem, 4vw, 3.5rem);
-}
-@media (min-width: 52rem) {
-  .also ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-.also-name {
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.25em;
-}
-.also-name:hover { color: var(--signal); }
-.also li p { margin: 0.5rem 0 0; font-size: 1.05rem; line-height: 1.55; }
-.also li .stack { margin-top: 0.6rem !important; }
-
-/* Desktop themes */
-
-.theme-piece { padding-bottom: clamp(3rem, 6vw, 4.5rem); }
-
-.shot {
-  margin: 0 0 1.75rem;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--shot-edge);
-  background: #000;
-}
-
-.stars {
-  margin-left: 0.4rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  color: var(--muted);
-  vertical-align: 0.2em;
-}
-.stars:empty { display: none; }
-
-.theme-piece h3 { margin-bottom: 1rem; }
-
-.wear {
+.demo .demo-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.9rem 0 0; }
+.demo-actions button {
+  min-height: 2.75rem;
   padding: 0.5rem 1rem;
   border: 1px solid var(--ink);
   border-radius: 999px;
@@ -490,50 +588,207 @@ nav a:hover { color: var(--ink); }
   font: inherit;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
-.wear:hover { background: var(--ink); color: var(--bg); }
-.wear[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--bg);
-  cursor: default;
+.demo-actions button:first-child { background: var(--ink); color: var(--bg); }
+.demo-actions button:hover { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--bg); }
+
+/* What the page can see: three columns, folding to label-over-values on phones. */
+.probe > div {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1.15fr;
+  gap: 0.2rem 0.9rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--card-edge);
+}
+.probe > .probe-head {
+  border-top: 0;
+  padding-top: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.probe [data-k] {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+.probe [data-k].hit { color: var(--bad); }
+.probe > div > span:last-child { color: var(--muted); }
+@media (max-width: 30rem) {
+  .probe > div { grid-template-columns: 1fr 1fr; }
+  .probe > div > span:first-child { grid-column: 1 / -1; font-weight: 600; }
+  .probe > .probe-head > span:first-child { display: none; }
 }
 
-/* How I work */
+/* The hash chain. */
+.chain { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.chain li {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--card-edge);
+  border-left-width: 3px;
+  border-radius: 0.6rem;
+  transition: border-color 0.25s ease, opacity 0.25s ease;
+}
+.chain li.ok { border-left-color: var(--good); }
+.chain li.bad { border-color: var(--bad); }
+.chain li.after { opacity: 0.55; }
+.chain-top { display: flex; flex-wrap: wrap; gap: 0.15rem 0.6rem; }
+.chain-top b { color: var(--muted); }
+.chain-amt { margin-left: auto; font-weight: 600; }
+.chain-amt.changed { color: var(--bad); }
+.demo .chain-hash {
+  margin-top: 0.15rem;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
 
-#method { padding-bottom: clamp(2rem, 5vw, 4rem); }
+/* The DFA diagram. */
+.nx-graph { margin-top: 0.6rem; }
+.nx-graph svg { display: block; width: 100%; max-width: 26rem; height: auto; margin-inline: auto; overflow: visible; }
+.nx-edge { fill: none; stroke: var(--muted); stroke-width: 1.2; }
+.nx-head { fill: var(--muted); }
+.nx-state { fill: var(--bg); stroke: var(--ink); stroke-width: 1.4; }
+.nx-state.accept { stroke: var(--accent-ink); }
+.nx-ring { fill: none; stroke: var(--accent-ink); stroke-width: 1.2; }
+.nx-name, .nx-label {
+  font: 600 11px "Schibsted Grotesk", system-ui, sans-serif;
+  fill: var(--ink);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.nx-label { font: 500 11px ui-monospace, "SF Mono", Menlo, Consolas, monospace; fill: var(--signal); }
+
+/* ------------------------------------------------------------------
+   Cards that tilt toward the pointer
+   ------------------------------------------------------------------ */
+
+.cards {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+@media (min-width: 60rem) {
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.card {
+  position: relative;
+  padding: 1.6rem 1.5rem 1.7rem;
+  background: var(--card);
+  border: 1px solid var(--card-edge);
+  border-radius: 1.25rem;
+}
+.card p { margin: 0.7rem 0 0; font-size: 1.02rem; line-height: 1.55; }
+.card .stack { margin-top: 0.9rem; font-size: 0.86rem; }
+.card .repo { font-size: 0.78rem; }
+
+.card-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+.card-name:hover { color: var(--signal); }
+
+@media (hover: hover) and (pointer: fine) {
+  .tilt {
+    transform: perspective(60rem) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, opacity 0.8s ease;
+  }
+  .tilt.is-tilting { transition: transform 0.08s linear, border-color 0.3s ease; border-color: var(--signal); }
+  .tilt > * { transform: translateZ(1.4rem); }
+  .tilt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(18rem circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.1), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .tilt.is-tilting::after { opacity: 1; }
+  /* A revealed card must not keep the reveal's transform, or it would fight the tilt. */
+  .js .tilt[data-reveal].in { transform: perspective(60rem) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+}
+
+.merged {
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 0;
+}
+.merged li { padding: 1.2rem 0; border-top: 1px solid var(--rule); }
+.merged li:last-child { padding-bottom: 0; }
+.merged p { margin: 0.5rem 0 0; }
+.merged .stack { margin-top: 0.6rem; }
+
+/* ------------------------------------------------------------------
+   Desktop themes: each screenshot tips up from the floor as it arrives
+   ------------------------------------------------------------------ */
+
+.spread > .wrap > h2 { margin-bottom: 1rem; }
+
+.theme-piece { margin-top: clamp(2.5rem, 7vh, 5rem); }
+
+.shot {
+  margin: 0 0 1.75rem;
+  perspective: 90rem;
+}
+.shot img {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid var(--shot-edge);
+  background: #000;
+  box-shadow: 0 2.5rem 5rem -1.5rem rgb(0 0 0 / 0.6);
+  transform: rotateX(calc(var(--tilt, 0) * 1deg)) scale(var(--sc, 1));
+  transform-origin: 50% 100%;
+}
+
+.theme-piece .panel { max-width: 44rem; }
+.theme-piece h3 { margin-bottom: 1rem; font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
+@media (max-width: 59.99rem) {
+  .theme-piece .panel { max-width: none; }
+}
+
+/* ------------------------------------------------------------------
+   How I work, contact, footer
+   ------------------------------------------------------------------ */
 
 .principle {
-  margin: 0 0 1.5rem !important;
-  font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
   font-style: italic;
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
-.tools {
-  margin: 2.5rem 0 0;
-}
+.tools { margin: 2rem 0 0; }
 .tools div {
   display: grid;
-  grid-template-columns: 9.5rem 1fr;
+  grid-template-columns: 9rem 1fr;
   gap: 1rem;
-  padding: 0.7rem 0;
+  padding: 0.65rem 0;
   border-top: 1px solid var(--rule);
 }
-.tools dt { font-size: 0.9rem; font-weight: 600; padding-top: 0.15rem; }
-.tools dd { margin: 0; font-size: 1.05rem; }
+.tools dt { font-size: 0.88rem; font-weight: 600; padding-top: 0.15rem; }
+.tools dd { margin: 0; font-size: 1.02rem; }
 @media (max-width: 30rem) {
-  .tools div { grid-template-columns: 1fr; gap: 0.15rem; }
+  .tools div, .facts div { grid-template-columns: 1fr; gap: 0.15rem; }
 }
-
-/* Contact */
-
-.contact { padding-bottom: clamp(3rem, 6vw, 5rem); }
 
 .contact-links {
   list-style: none;
-  margin: 0;
+  margin: 1.75rem 0 0;
   padding: 0;
 }
 .contact-links li { border-top: 1px solid var(--rule); }
@@ -544,36 +799,32 @@ nav a:hover { color: var(--ink); }
   align-items: baseline;
   justify-content: space-between;
   gap: 0.25rem 1.5rem;
-  padding: 1.1rem 0;
-  font-size: clamp(1.75rem, 5vw, 3.25rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+  padding: 1rem 0;
+  font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, padding-left 0.3s ease;
 }
 .contact-links a span {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 400;
   letter-spacing: 0;
   color: var(--muted);
+  overflow-wrap: anywhere;
 }
-.contact-links a:hover { color: var(--signal); }
+.contact-links a:hover { color: var(--signal); padding-left: 0.5rem; }
 
 .site-foot {
-  padding-top: 1.5rem;
-  padding-bottom: 3rem;
-  font-size: 0.875rem;
+  padding-block: 2rem 2.5rem;
+  font-size: 0.86rem;
   color: var(--muted);
 }
 .site-foot p { margin: 0; }
 
 /* ------------------------------------------------------------------
-   Liquid Glass: the page sits on a blurred copy of the theme's own
-   wallpaper, and surfaces use the theme's glass recipe.
+   Glass theme: the blurred wallpaper and the glass material
    ------------------------------------------------------------------ */
-
-.backdrop { display: none; }
 
 [data-theme="glass"] body { background: #050806; }
 
@@ -581,15 +832,15 @@ nav a:hover { color: var(--ink); }
   display: block;
   position: fixed;
   inset: -10%;
-  z-index: -1;
+  z-index: 0;
   background: url("assets/omarchy-liquid-glass-theme.webp") center / cover no-repeat;
-  filter: blur(48px) saturate(1.5) brightness(0.55);
+  filter: blur(48px) saturate(1.5) brightness(0.42);
 }
 
 [data-theme="glass"] .site-head {
   top: 0.6rem;
   margin: 0.6rem auto 0;
-  max-width: min(78rem, calc(100% - 1.2rem));
+  max-width: min(82rem, calc(100% - 1.2rem));
   border: 1px solid rgba(255, 255, 255, 0.21);
   border-radius: 14px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.28) 45%, rgba(0, 0, 0, 0.35));
@@ -600,58 +851,39 @@ nav a:hover { color: var(--ink); }
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
 }
+[data-theme="glass"] .progress { left: 14px; right: 14px; bottom: 0; }
 
-[data-theme="glass"] .note {
-  padding: 0.75rem 0.9rem 0.75rem 2.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.21);
-  border-radius: 18px;
+[data-theme="glass"] .card,
+[data-theme="glass"] .note,
+[data-theme="glass"] .demo {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -1px 0 rgba(0, 0, 0, 0.29),
-    0 6px 18px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+    0 6px 18px rgba(0, 0, 0, 0.4);
 }
-[data-theme="glass"] .note-n { left: 0.95rem; top: 0.75rem; }
-[data-theme="glass"] .note.is-lit,
-[data-theme="glass"] .note:target {
-  border-color: rgba(150, 207, 232, 0.7);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.34),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.29),
-    0 0 0 1px rgba(150, 207, 232, 0.5),
-    0 6px 18px rgba(0, 0, 0, 0.45);
-}
-
-[data-theme="glass"] .shot {
+[data-theme="glass"] .card { border-radius: 22px; }
+[data-theme="glass"] .shot img {
   border-radius: 22px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 12px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 2.5rem 5rem -1.5rem rgba(0, 0, 0, 0.7);
 }
-
-[data-theme="glass"] .section h2,
-[data-theme="glass"] #method h2 { border-top-color: rgba(255, 255, 255, 0.5); }
-
 [data-theme="glass"] .theme-switch button[aria-pressed="true"],
+[data-theme="glass"] .links a:first-child,
+[data-theme="glass"] .links a:not(:first-child):hover,
 [data-theme="glass"] .wear:hover,
 [data-theme="glass"] .wear[aria-pressed="true"] {
   background: rgba(255, 255, 255, 0.9);
   color: #0A0A0A;
 }
 
-/* Sadie: notes sit on the theme's lighter background with a copper edge. */
-[data-theme="sadie"] .note { padding: 0.6rem 0.85rem 0.6rem 2.3rem; border-radius: 0 6px 6px 0; }
-[data-theme="sadie"] .note-n { left: 0.85rem; top: 0.6rem; }
-
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   Reduced motion: no rises, no tilts. The scene itself also stops
+   turning and only changes shape as you scroll.
+   ------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { transition: none !important; }
-}
-
-/* Open source: the same list as "Also built", without the divider above it */
-
-.also-plain { margin-top: 0; padding-top: 0; border-top: 0; }
-@media (min-width: 52rem) {
-  .also-plain ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .js [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .tilt, .tilt > * { transform: none !important; }
+  .shot img { transform: none; }
+  * { transition-duration: 0.01ms !important; }
 }
