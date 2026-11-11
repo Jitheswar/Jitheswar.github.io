@@ -603,7 +603,9 @@ h4 {
 .t-demo:has(> .demo[hidden]) + .t-src { grid-column: 1 / -1; }
 
 .t-shot { padding: 0; overflow: hidden; }
-.t-shot img { width: 100%; }
+.t-shot a { display: block; }
+.t-shot img { width: 100%; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.t-shot a:hover img { transform: scale(1.03); }
 .t-shot figcaption {
   padding: 0.8rem 1.1rem 0.9rem;
   border-top: 1px solid var(--card-edge);
