@@ -220,6 +220,7 @@
         x: !isWide ? 0 : d.x != null ? parseFloat(d.x) : side === 'right' ? 0.46 : side === 'left' ? -0.46 : 0,
         y: isWide ? parseFloat(d.y || 0) : parseFloat(d.yM || 0),
         alpha: isWide ? parseFloat(d.dim || 1) : parseFloat(d.dimM || d.dim || 1),
+        scale: isWide ? parseFloat(d.scale || 1) : 1,
         accent: hex(d.accent),
         spin: SPINS[d.shape] ? 1 : 0,
       };
@@ -370,7 +371,7 @@
   let P = 0, time = 0, last = 0, running = false, raf = 0;
   let lastScroll = window.scrollY, kick = 0;
   let ptrX = 0, ptrY = 0, px = 0, py = 0;
-  const cur = { x: 0, y: 0, alpha: 0, spin: 0, accent: [1, 1, 1] };
+  const cur = { x: 0, y: 0, alpha: 0, scale: 1, spin: 0, accent: [1, 1, 1] };
   let liveKey = '';
   const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -408,6 +409,7 @@
     cur.x = lerp(cur.x, lerp(A.x, B.x, e), k);
     cur.y = lerp(cur.y, lerp(A.y, B.y, e), k);
     cur.alpha = lerp(cur.alpha, lerp(A.alpha, B.alpha, e), k);
+    cur.scale = lerp(cur.scale, lerp(A.scale, B.scale, e), k);
     cur.spin = lerp(A.spin, B.spin, e);
     for (let c = 0; c < 3; c++) cur.accent[c] = lerp(cur.accent[c], lerp(accA[c], accB[c], e), k);
 
@@ -430,7 +432,7 @@
     gl.uniform1f(U.uT, A.shape === B.shape ? 0 : t); // same object on both sides: only position and brightness change
     gl.uniform1f(U.uTime, time);
     gl.uniform1f(U.uAspect, aspect);
-    gl.uniform1f(U.uScale, scale);
+    gl.uniform1f(U.uScale, scale * cur.scale);
     gl.uniform1f(U.uSize, dpr * (small ? 2.1 : 2.4) * Math.max(0.85, Math.min(1.3, cssH / 900)));
     gl.uniform1f(U.uSpin, spin);
     gl.uniform1f(U.uTilt, 0.26 + py * 0.22);

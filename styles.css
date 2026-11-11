@@ -525,14 +525,19 @@ h4 {
   border: 1px solid var(--card-edge);
   border-radius: 1.4rem;
 }
+/* On wide screens the tiles take eight of the twelve columns and leave the other four
+   open, so the object stays in view beside them. Projects alternate sides. */
 @media (min-width: 60rem) {
-  .t-stat { grid-column: span 4; }
-  .t-text { grid-column: span 8; }
-  .t-demo { grid-column: span 7; }
-  .t-src { grid-column: span 5; }
-  .t-src.wide { grid-column: 1 / -1; }
-  .t-src.wide .notes { grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }
-  .t-shot { grid-column: span 6; }
+  .tile { grid-column: 1 / span 8; }
+  .t-shot:nth-of-type(odd) { grid-column: 1 / span 4; }
+  .t-shot:nth-of-type(even) { grid-column: 5 / span 4; }
+  .project:nth-of-type(even) .tile { grid-column: 5 / span 8; }
+  .project:nth-of-type(even) .t-shot:nth-of-type(odd) { grid-column: 5 / span 4; }
+  .project:nth-of-type(even) .t-shot:nth-of-type(even) { grid-column: 9 / span 4; }
+  .t-src .notes { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  .bento .t-stat { flex-direction: row; align-items: center; gap: clamp(1.5rem, 3vw, 2.75rem); }
+  .bento .t-stat .big { margin: 0; flex: none; }
+  .t-stat .cap + .sub { margin-top: 0.9rem; padding-top: 0.9rem; }
 }
 /* Tiles arrive one after another. */
 .js .bento > [data-reveal]:nth-child(2) { transition-delay: 0.08s; }
@@ -600,7 +605,6 @@ h4 {
 .t-demo { padding: 0; background: none; border: 0; }
 .t-demo .demo { height: 100%; margin: 0; padding: clamp(1.25rem, 2.2vw, 1.9rem); border-radius: 1.4rem; background: var(--card); }
 .t-demo:has(> .demo[hidden]) { display: none; }
-.t-demo:has(> .demo[hidden]) + .t-src { grid-column: 1 / -1; }
 
 .t-shot { padding: 0; overflow: hidden; }
 .t-shot a { display: block; }
