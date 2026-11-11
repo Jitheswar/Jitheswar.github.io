@@ -228,19 +228,20 @@
     const y = window.scrollY;
     bounds = [];
     for (let i = 0; i < els.length - 1; i++) {
-      const a = els[i].getBoundingClientRect().bottom + y;
-      const b = els[i + 1].getBoundingClientRect().top + y;
-      bounds.push((a + b) / 2);
+      // The hand-over is timed from the top of the next section, so any empty
+      // stretch left at the end of this one is where the change is seen.
+      bounds.push({ at: els[i + 1].getBoundingClientRect().top + y, same: scenes[i].shape === scenes[i + 1].shape });
     }
   }
 
   // Shape i holds until the next section starts to come up from the bottom of the screen,
   // and the new shape is finished by the time that section's text is a third of the way up.
   function progressAt(scrollY, vh) {
-    const c = scrollY + vh * 0.96, w = vh * 0.66;
+    const c = scrollY + vh * 0.94;
     let p = 0;
     for (let i = 0; i < bounds.length; i++) {
-      const t = (c - bounds[i]) / w;
+      // Moving the same object aside for its tiles is quick. Changing shape takes longer.
+      const t = (c - bounds[i].at) / (vh * (bounds[i].same ? 0.38 : 0.64));
       p += t <= 0 ? 0 : t >= 1 ? 1 : t;
     }
     return p;

@@ -504,10 +504,27 @@ h4 {
 }
 .title-screen .repo { margin: 0; }
 
+/* Each block of tiles ends with an empty stretch of screen. That is where the object
+   changes into the next one, with nothing in front of it. */
 .detail {
   align-items: flex-start;
   min-height: 0;
-  padding-block: 1rem clamp(4rem, 12vh, 8rem);
+  padding-block: 1rem 72vh;
+}
+.has-scene .spread { padding-bottom: 60vh; }
+html:not(.has-scene) .detail { padding-bottom: clamp(4rem, 12vh, 8rem); }
+
+@media (min-width: 60rem) {
+  /* Even-numbered projects put the object on the left, so their title sits on the right. */
+  .project:nth-of-type(even) .title-screen .wrap { text-align: right; }
+  .project:nth-of-type(even) .title-screen :is(.name, .pitch) { margin-left: auto; }
+  .project:nth-of-type(even) .title-screen :is(.idx, .repo) { justify-content: flex-end; }
+  /* Full-width sections keep to two thirds as well, leaving the object its lane. */
+  .has-scene .spread > .wrap > * { max-width: 66%; }
+}
+@media (max-width: 59.99rem) {
+  .has-scene .detail { padding-bottom: 55vh; padding-bottom: 55svh; }
+  .has-scene .spread { padding-bottom: 50vh; padding-bottom: 50svh; }
 }
 
 .bento {
