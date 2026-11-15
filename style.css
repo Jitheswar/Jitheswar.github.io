@@ -60,6 +60,8 @@ a { color: inherit; text-decoration: none; }
   transition: opacity 1.2s ease;
 }
 #gl.on { opacity: 1; }
+#gl { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+#gl.drag { cursor: grabbing; }
 
 /* ---------- header ---------- */
 .top {
@@ -98,7 +100,7 @@ a { color: inherit; text-decoration: none; }
 .rail a.on::after { transform: scaleX(2.2); background: var(--acc); height: 2px; }
 
 /* ---------- sections ---------- */
-main { position: relative; z-index: 1; }
+main { position: relative; z-index: 1; pointer-events: none; }
 .s {
   min-height: 100vh; min-height: 100lvh;
   display: flex; align-items: center;

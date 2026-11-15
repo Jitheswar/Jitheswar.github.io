@@ -407,6 +407,26 @@
     document.addEventListener('pointerleave', () => { ptr.on = 0; });
   }
 
+  /* ----- drag to rotate ----- */
+  const drag = { on: false, id: 0, x: 0, y: 0, rx: 0, ry: 0, vx: 0, vy: 0, home: false, sec: 0 };
+  const SENS = 0.0085;
+  canvas.addEventListener('pointerdown', (e) => {
+    if (e.button) return;
+    drag.on = true; drag.home = false; drag.id = e.pointerId; drag.x = e.clientX; drag.y = e.clientY; drag.vx = drag.vy = 0;
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    canvas.classList.add('drag');
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!drag.on || e.pointerId !== drag.id) return;
+    const dx = (e.clientX - drag.x) * SENS, dy = (e.clientY - drag.y) * SENS;
+    drag.x = e.clientX; drag.y = e.clientY;
+    drag.ry += dx; drag.rx = mx(-1.4, mn(1.4, drag.rx + dy));
+    drag.vy = drag.vy * 0.5 + dx * 0.5; drag.vx = drag.vx * 0.5 + dy * 0.5;
+  });
+  const endDrag = (e) => { if (e.pointerId === drag.id) { drag.on = false; canvas.classList.remove('drag'); } };
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', endDrag);
+
   /* ----- frame loop ----- */
   gl.enable(gl.DEPTH_TEST); gl.enable(gl.CULL_FACE);
   let pos = 0, last = 0, started = false;
@@ -426,12 +446,29 @@
     bindPair(from);
 
     const k = 1 - Math.exp(-dt * 5);
-    ptr.sx += (ptr.x - ptr.sx) * k; ptr.sy += (ptr.y - ptr.sy) * k; ptr.son += (ptr.on - ptr.son) * k;
+    ptr.sx += (ptr.x - ptr.sx) * k; ptr.sy += (ptr.y - ptr.sy) * k; ptr.son += ((drag.on ? 0 : ptr.on) - ptr.son) * k;
+
+    // the reader's own rotation: coasts after release, eases home when the section changes
+    const sec = Math.round(target);
+    if (sec !== drag.sec) {
+      drag.sec = sec;
+      if (!drag.on) { drag.home = true; drag.ry -= Math.round(drag.ry / (2 * Math.PI)) * 2 * Math.PI; }
+    }
+    if (!drag.on) {
+      if (drag.home) {
+        drag.rx += -drag.rx * k; drag.ry += -drag.ry * k; drag.vx = drag.vy = 0;
+        if (ab(drag.rx) + ab(drag.ry) < 0.001) { drag.rx = drag.ry = 0; drag.home = false; }
+      } else {
+        const fr = dt * 60, damp = Math.exp(-dt * 3.2);
+        drag.ry += drag.vy * fr; drag.rx = mx(-1.4, mn(1.4, drag.rx + drag.vx * fr));
+        drag.vx *= damp; drag.vy *= damp;
+      }
+    }
 
     const calm = mqCalm.matches, time = now / 1000;
     const A = SHAPES[from].rot, Bq = SHAPES[to].rot, e = ss(0, 1, t);
-    const rx = A[0] + (Bq[0] - A[0]) * e + (calm ? 0 : Math.sin(time * 0.21) * 0.05) - ptr.sy * 0.14 * ptr.son;
-    const ry = A[1] + (Bq[1] - A[1]) * e + (calm ? 0 : Math.sin(time * 0.27) * 0.3) + ptr.sx * 0.3 * ptr.son;
+    const rx = A[0] + (Bq[0] - A[0]) * e + (calm ? 0 : Math.sin(time * 0.21) * 0.05) - ptr.sy * 0.14 * ptr.son + drag.rx;
+    const ry = A[1] + (Bq[1] - A[1]) * e + (calm ? 0 : Math.sin(time * 0.27) * 0.3) + ptr.sx * 0.3 * ptr.son + drag.ry;
     const cx = Math.cos(rx), sx = Math.sin(rx), cy = Math.cos(ry), sy = Math.sin(ry);
     // Rx * Ry, column-major
     gl.uniformMatrix3fv(U.uRot, false, [cy, sx * sy, -cx * sy, 0, cx, sx, sy, -sx * cy, cx * cy]);
