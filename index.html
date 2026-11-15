@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jitheswar · ML and systems</title>
+<meta name="description" content="Jitheswar builds ML and systems with results someone else can check: a privacy browser on Chromium, an AI-native Linux distribution, an optimizing compiler, and merged fixes in Zephyr RTOS.">
+<meta property="og:title" content="Jitheswar · ML and systems">
+<meta property="og:description" content="Results someone else can check. Browsers, compilers, operating systems and models, with the numbers and the failures written down.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#efefec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23121214'/%3E%3Cpath d='M9 7h15v5h-4v8a7 7 0 0 1-14 0h5a2 2 0 0 0 4 0v-8H9z' fill='%23efefec'/%3E%3Crect x='6' y='17' width='5' height='3' fill='%23e8421a'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<header class="top">
+  <a class="me" href="#intro">Jitheswar</a>
+  <span class="count" aria-hidden="true"><b id="cur">00</b> / <span id="tot">10</span></span>
+  <nav>
+    <a href="https://github.com/Jitheswar">GitHub</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<nav class="rail" id="rail" aria-label="Sections"></nav>
+
+<main>
+
+<section class="s hero" id="intro" data-name="Intro">
+  <div class="c">
+    <p class="k r">Hyderabad, India · B.Tech CSE, KL University, class of 2028</p>
+    <h1 class="r">ML and systems, with results someone else can check.</h1>
+    <p class="b r">I patch browsers, write compilers, put together operating systems and train models. Each project here links to its source, its numbers, and the notes on what didn't work.</p>
+    <p class="cue r"><span class="arrow" aria-hidden="true"></span>Eight projects, then upstream work</p>
+  </div>
+</section>
+
+<section class="s" id="jithubrowser" data-name="JithuBrowser">
+  <div class="c">
+    <p class="k r"><span class="n">01</span>Privacy · Chromium, C++</p>
+    <h2 class="r">JithuBrowser</h2>
+    <p class="lead r">A browser where pages can't watch what you do.</p>
+    <p class="b r">23 patches on official Chromium. Sites can't see tab switches, window focus, what you searched for in the page, your typing rhythm or your GPU name. Chrome-only sites and Web Store extensions keep working.</p>
+    <dl class="st r">
+      <div><dt>35 / 35</dt><dd>privacy tests passed on Linux</dd></div>
+      <div><dt>31</dt><dd>of those fail on stock Chrome</dd></div>
+      <div><dt>5</dt><dd>distros with verified installs</dd></div>
+    </dl>
+    <p class="cv r"><span>Not yet</span>The Windows installer is cross-compiled and has never run on real Windows.</p>
+    <p class="ln r"><a href="https://github.com/Jitheswar/JithuBrowser">Source</a><a href="https://github.com/Jitheswar/JithuBrowser/releases">Releases</a></p>
+  </div>
+</section>
+
+<section class="s" id="amadeus" data-name="Amadeus OS">
+  <div class="c">
+    <p class="k r"><span class="n">02</span>Linux distribution · Python, QML, Shell</p>
+    <h2 class="r">Amadeus OS</h2>
+    <p class="lead r">A rolling Linux distribution with an AI layer you can audit.</p>
+    <p class="b r">Arch base, Hyprland desktop, encrypted btrfs. The AI works through permission-checked tools, so every action passes a capability policy, lands in an audit log and can be undone. Updates snapshot first and roll back from the installed system or the installer. The desktop works without an AI account.</p>
+    <dl class="st r">
+      <div><dt>117</dt><dd>installed-system checks passed in a VM</dd></div>
+      <div><dt>2</dt><dd>rollback paths, both tested</dd></div>
+      <div><dt>131</dt><dd>commits so far</dd></div>
+    </dl>
+    <p class="cv r"><span>Not yet</span>Real hardware and live provider sign-in are unverified. It is a pre-release.</p>
+    <p class="ln r"><a href="https://github.com/Jitheswar/Amadeus">Source</a><a href="https://github.com/Jitheswar/Amadeus/blob/main/docs/DECISIONS.md">Design decisions</a></p>
+  </div>
+</section>
+
+<section class="s" id="nexcc" data-name="NexCC">
+  <div class="c">
+    <p class="k r"><span class="n">03</span>Compiler · JavaScript · with N. Rithvik Sai</p>
+    <h2 class="r">NexCC</h2>
+    <p class="lead r">An optimizing compiler where no stage is hidden.</p>
+    <p class="b r">A C-subset compiler you can watch work: regex to minimized DFA, LL(1) and four LR-family parser tables, SSA with φ placement, constant propagation, value numbering and loop-invariant code motion, then graph-coloring register allocation down to RV32IM. The bytecode VM tracks use-after-free and steps backwards.</p>
+    <dl class="st r">
+      <div><dt>5</dt><dd>optimizer passes, each with a diff you can scrub</dd></div>
+      <div><dt>RV32IM</dt><dd>RISC-V backend, assembly and binary</dd></div>
+      <div><dt>17</dt><dd>end-to-end tests</dd></div>
+    </dl>
+    <p class="cv r"><span>Scope</span>It compiles a bounded subset of C, not C.</p>
+    <p class="ln r"><a href="https://github.com/Jitheswar/nexcc">Source</a></p>
+  </div>
+</section>
+
+<section class="s" id="craftie" data-name="Craftie">
+  <div class="c">
+    <p class="k r"><span class="n">04</span>LLM agent · TypeScript</p>
+    <h2 class="r">Craftie</h2>
+    <p class="lead r">An AI coworker that joins your Minecraft world as a second player.</p>
+    <p class="b r">Ask in chat for a house, twenty iron or a set of armor and it plans the whole chain itself: which tool comes first, where to mine, what to smelt. Between jobs it follows you, defends you, recovers your items when you die, and remembers what you did together across sessions.</p>
+    <dl class="st r">
+      <div><dt>4</dt><dd>Crafties can split one build between them</dd></div>
+      <div><dt>2</dt><dd>schematic formats it builds from</dd></div>
+      <div><dt>0</dt><dd>of your own blocks broken while getting unstuck</dd></div>
+    </dl>
+    <p class="cv r"><span>Scope</span>Built and tested on Linux. A fan project, not affiliated with Mojang or Microsoft.</p>
+    <p class="ln r"><a href="https://github.com/Jitheswar/craftie">Source</a></p>
+  </div>
+</section>
+
+<section class="s" id="rsna" data-name="RSNA knee MRI">
+  <div class="c">
+    <p class="k r"><span class="n">05</span>Medical imaging · PyTorch · Team Elyra</p>
+    <h2 class="r">RSNA knee MRI</h2>
+    <p class="lead r">Twelve findings, 4,407 studies, and only 58 reference labels.</p>
+    <p class="b r">Our entry for the RSNA 2026 Kaggle competition. Reports came in about nine languages and often disagreed with the radiologist panel, so we graded them with LLMs, calibrated the grades against the 58 labelled studies, and trained a multi-series 2.5D ConvNeXt on the result.</p>
+    <dl class="st r">
+      <div><dt>0.958</dt><dd>public leaderboard AUC, blended with two credited public pipelines</dd></div>
+      <div><dt>0.951</dt><dd>our own models alone</dd></div>
+      <div><dt>0.943</dt><dd>the public baseline we started from</dd></div>
+    </dl>
+    <p class="cv r"><span>Didn't help</span>A second self-training round, mirror augmentation, an AUC-margin loss. Gains flattened after about six models.</p>
+    <p class="ln r"><a href="https://github.com/Jitheswar/RSNA">Source</a><a href="https://huggingface.co/Jitheswar/rsna-knee-v2-r6distilled">Models</a></p>
+  </div>
+</section>
+
+<section class="s" id="dr" data-name="DR screening">
+  <div class="c">
+    <p class="k r"><span class="n">06</span>Explainable AI · MATLAB · SIH 2026</p>
+    <h2 class="r">Retinopathy screening</h2>
+    <p class="lead r">A screening aid that checks its own explanation.</p>
+    <p class="b r">A photo of the back of the eye goes in, and clear, refer or escalate to a human comes out. The model's heatmap is compared with lesion evidence from two independent detectors. When they disagree, or the image is poor, the case goes to a person.</p>
+    <dl class="st r">
+      <div><dt>0.982</dt><dd>validation sensitivity</dd></div>
+      <div><dt>0.917</dt><dd>validation specificity</dd></div>
+      <div><dt>0.960</dt><dd>sensitivity on the internal test split</dd></div>
+    </dl>
+    <p class="cv r"><span>Rejected</span>A looser setting handled more cases alone but sent two referable patients home. The sealed external test set is still unopened.</p>
+    <p class="ln r"><a href="https://github.com/Jitheswar/sih26038">Source</a></p>
+  </div>
+</section>
+
+<section class="s" id="onepass" data-name="onepass-zsc">
+  <div class="c">
+    <p class="k r"><span class="n">07</span>NLP · PyTorch · Team project</p>
+    <h2 class="r">onepass-zsc</h2>
+    <p class="lead r">Zero-shot classification for any number of labels in one forward pass.</p>
+    <p class="b r">The usual approach runs the model once per label, so 77 labels cost 77 passes. onepass packs every label into one sequence behind a block attention mask: labels can't see each other and the text is encoded once. Probabilities are calibrated on datasets the benchmark never touches.</p>
+    <dl class="st r">
+      <div><dt>0.682</dt><dd>mean accuracy on 13 unseen datasets, against 0.660 for the same backbone run per label</dd></div>
+      <div><dt>1.5×</dt><dd>faster on CPU</dd></div>
+      <div><dt>0.37 GB</dt><dd>of weights in fp16</dd></div>
+    </dl>
+    <p class="cv r"><span>Went wrong</span>One dataset marks entailment as 0. Reading it as 1 inverted two thirds of the training data and took BBC News from 82% to 18%.</p>
+    <p class="ln r"><a href="https://github.com/Jitheswar/onepass-zsc">Source</a><a href="https://github.com/Jitheswar/onepass-zsc/blob/main/RESULTS.md">Full results</a></p>
+  </div>
+</section>
+
+<section class="s" id="spend" data-name="Spend policy">
+  <div class="c">
+    <p class="k r"><span class="n">08</span>Agent payments · FastAPI, Algorand</p>
+    <h2 class="r">Agent spend policy engine</h2>
+    <p class="lead r">Decides whether an AI agent may pay, before any money moves.</p>
+    <p class="b r">Approved payments settle for real over x402 on Algorand testnet. Every decision, allowed or blocked, is hash-chained into a log whose latest hash is written on-chain, so the operator can't quietly rewrite history. The dashboard has a button that tampers with a record so you can watch verification catch it.</p>
+    <dl class="st r">
+      <div><dt>10 s</dt><dd>to verify the whole log yourself</dd></div>
+      <div><dt>402 → 200</dt><dd>request, pay, retry, served</dd></div>
+      <div><dt>2</dt><dd>live paid APIs behind it</dd></div>
+    </dl>
+    <p class="cv r"><span>Scope</span>Testnet USDC only.</p>
+    <p class="ln r"><a href="https://github.com/Jitheswar/agent-spend-policy-engine">Source</a></p>
+  </div>
+</section>
+
+<section class="s" id="upstream" data-name="Open source">
+  <div class="c">
+    <p class="k r"><span class="n">09</span>Open source</p>
+    <h2 class="r">Upstream</h2>
+    <p class="lead r">Small fixes in other people's large codebases.</p>
+    <ul class="up r">
+      <li><a href="https://github.com/zephyrproject-rtos/zephyr/pull/123434"><b>Zephyr RTOS</b><span>DNS resolver rejected valid 63-octet labels (RFC 1035). Fix and test.</span><i class="ok">merged</i></a></li>
+      <li><a href="https://github.com/zephyrproject-rtos/zephyr/pull/123198"><b>Zephyr RTOS</b><span>Link failure when the host compiler enables the stack protector by default.</span><i class="ok">merged</i></a></li>
+      <li><a href="https://github.com/omacom/omarchy/pull/17323"><b>Omarchy</b><span>Dell G15 5530 touchpad never bound at boot.</span><i>open</i></a></li>
+      <li><a href="https://github.com/omacom/omarchy/pull/17324"><b>Omarchy</b><span>Shell tests ran the installed commands instead of the checkout's.</span><i>open</i></a></li>
+      <li><a href="https://github.com/Zagitta/gpu-unlock/pull/327"><b>gpu-unlock</b><span>Support for the laptop RTX 3050 6 GB.</span><i>open</i></a></li>
+      <li><a href="https://github.com/Jitheswar/omarchy-liquid-glass-theme"><b>Liquid Glass</b><span>My Omarchy theme: glass that takes its color from the wallpaper.</span><i>17 stars</i></a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="s end" id="contact" data-name="Contact">
+  <div class="c">
+    <p class="k r"><span class="n">10</span>Contact</p>
+    <h2 class="r">Check my work.</h2>
+    <p class="b r">If a number here doesn't reproduce, I want to know. I'm also open to internships and research work in ML and systems.</p>
+    <p class="big r"><a href="mailto:jitheswaredu@gmail.com">jitheswaredu@gmail.com</a></p>
+    <p class="ln r"><a href="https://github.com/Jitheswar">GitHub</a><a href="https://linkedin.com/in/jitheswar">LinkedIn</a><a href="https://leetcode.com/u/Jitheswar/">LeetCode</a></p>
+    <p class="fine r">Hand-written HTML, CSS and WebGL. No framework, no tracking.</p>
+  </div>
+</section>
+
+</main>
+
+<script src="main.js" defer></script>
+</body>
+</html>
