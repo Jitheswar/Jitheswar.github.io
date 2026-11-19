@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jitheswar · ML and systems</title>
-<meta name="description" content="Jitheswar builds ML and systems with results someone else can check: a privacy browser on Chromium, an AI-native Linux distribution, an optimizing compiler, and merged fixes in Zephyr RTOS.">
+<meta name="description" content="Jitheswar builds ML and systems with results someone else can check: a privacy browser on Chromium, an optimizing compiler, medical imaging models, and merged fixes in Zephyr RTOS.">
 <meta property="og:title" content="Jitheswar · ML and systems">
-<meta property="og:description" content="Results someone else can check. Browsers, compilers, operating systems and models, with the numbers and the failures written down.">
+<meta property="og:description" content="Results someone else can check. Browsers, compilers, agents and models, with the numbers and the failures written down.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#efefec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
@@ -20,7 +20,7 @@
 
 <header class="top">
   <a class="me" href="#intro">Jitheswar</a>
-  <span class="count" aria-hidden="true"><b id="cur">00</b> / <span id="tot">10</span></span>
+  <span class="count" aria-hidden="true"><b id="cur">00</b> / <span id="tot">09</span></span>
   <nav>
     <a href="https://github.com/Jitheswar">GitHub</a>
     <a href="#contact">Contact</a>
@@ -35,8 +35,8 @@
   <div class="c">
     <p class="k r">Hyderabad, India · B.Tech CSE, KL University, class of 2028</p>
     <h1 class="r">ML and systems, with results someone else can check.</h1>
-    <p class="b r">I patch browsers, write compilers, put together operating systems and train models. Each project here links to its source, its numbers, and the notes on what didn't work.</p>
-    <p class="cue r"><span class="arrow" aria-hidden="true"></span>Eight projects, then upstream work · drag the model to turn it</p>
+    <p class="b r">I patch browsers, write compilers and train models. Each project here links to its source, its numbers, and the notes on what didn't work.</p>
+    <p class="cue r"><span class="arrow" aria-hidden="true"></span>Seven projects, then upstream work · drag the model to turn it</p>
   </div>
 </section>
 
@@ -56,25 +56,9 @@
   </div>
 </section>
 
-<section class="s" id="amadeus" data-name="Amadeus OS">
-  <div class="c">
-    <p class="k r"><span class="n">02</span>Linux distribution · Python, QML, Shell</p>
-    <h2 class="r">Amadeus OS</h2>
-    <p class="lead r">A rolling Linux distribution with an AI layer you can audit.</p>
-    <p class="b r">Arch base, Hyprland desktop, encrypted btrfs. The AI works through permission-checked tools, so every action passes a capability policy, lands in an audit log and can be undone. Updates snapshot first and roll back from the installed system or the installer. The desktop works without an AI account.</p>
-    <dl class="st r">
-      <div><dt>117</dt><dd>installed-system checks passed in a VM</dd></div>
-      <div><dt>2</dt><dd>rollback paths, both tested</dd></div>
-      <div><dt>131</dt><dd>commits so far</dd></div>
-    </dl>
-    <p class="cv r"><span>Not yet</span>Real hardware and live provider sign-in are unverified. It is a pre-release.</p>
-    <p class="ln r"><a href="https://github.com/Jitheswar/Amadeus">Source</a><a href="https://github.com/Jitheswar/Amadeus/blob/main/docs/DECISIONS.md">Design decisions</a></p>
-  </div>
-</section>
-
 <section class="s" id="nexcc" data-name="NexCC">
   <div class="c">
-    <p class="k r"><span class="n">03</span>Compiler · JavaScript · with N. Rithvik Sai</p>
+    <p class="k r"><span class="n">02</span>Compiler · JavaScript · with N. Rithvik Sai</p>
     <h2 class="r">NexCC</h2>
     <p class="lead r">An optimizing compiler where no stage is hidden.</p>
     <p class="b r">A C-subset compiler you can watch work: regex to minimized DFA, LL(1) and four LR-family parser tables, SSA with φ placement, constant propagation, value numbering and loop-invariant code motion, then graph-coloring register allocation down to RV32IM. The bytecode VM tracks use-after-free and steps backwards.</p>
@@ -90,7 +74,7 @@
 
 <section class="s" id="craftie" data-name="Craftie">
   <div class="c">
-    <p class="k r"><span class="n">04</span>LLM agent · TypeScript</p>
+    <p class="k r"><span class="n">03</span>LLM agent · TypeScript</p>
     <h2 class="r">Craftie</h2>
     <p class="lead r">An AI coworker that joins your Minecraft world as a second player.</p>
     <p class="b r">Ask in chat for a house, twenty iron or a set of armor and it plans the whole chain itself: which tool comes first, where to mine, what to smelt. Between jobs it follows you, defends you, recovers your items when you die, and remembers what you did together across sessions.</p>
@@ -106,7 +90,7 @@
 
 <section class="s" id="rsna" data-name="RSNA knee MRI">
   <div class="c">
-    <p class="k r"><span class="n">05</span>Medical imaging · PyTorch · Team Elyra</p>
+    <p class="k r"><span class="n">04</span>Medical imaging · PyTorch · Team Elyra</p>
     <h2 class="r">RSNA knee MRI</h2>
     <p class="lead r">Twelve findings, 4,407 studies, and only 58 reference labels.</p>
     <p class="b r">Our entry for the RSNA 2026 Kaggle competition. Reports came in about nine languages and often disagreed with the radiologist panel, so we graded them with LLMs, calibrated the grades against the 58 labelled studies, and trained a multi-series 2.5D ConvNeXt on the result.</p>
@@ -122,7 +106,7 @@
 
 <section class="s" id="dr" data-name="DR screening">
   <div class="c">
-    <p class="k r"><span class="n">06</span>Explainable AI · MATLAB · SIH 2026</p>
+    <p class="k r"><span class="n">05</span>Explainable AI · MATLAB · SIH 2026</p>
     <h2 class="r">Retinopathy screening</h2>
     <p class="lead r">A screening aid that checks its own explanation.</p>
     <p class="b r">A photo of the back of the eye goes in, and clear, refer or escalate to a human comes out. The model's heatmap is compared with lesion evidence from two independent detectors. When they disagree, or the image is poor, the case goes to a person.</p>
@@ -138,7 +122,7 @@
 
 <section class="s" id="onepass" data-name="onepass-zsc">
   <div class="c">
-    <p class="k r"><span class="n">07</span>NLP · PyTorch · Team project</p>
+    <p class="k r"><span class="n">06</span>NLP · PyTorch · Team project</p>
     <h2 class="r">onepass-zsc</h2>
     <p class="lead r">Zero-shot classification for any number of labels in one forward pass.</p>
     <p class="b r">The usual approach runs the model once per label, so 77 labels cost 77 passes. onepass packs every label into one sequence behind a block attention mask: labels can't see each other and the text is encoded once. Probabilities are calibrated on datasets the benchmark never touches.</p>
@@ -154,7 +138,7 @@
 
 <section class="s" id="spend" data-name="Spend policy">
   <div class="c">
-    <p class="k r"><span class="n">08</span>Agent payments · FastAPI, Algorand</p>
+    <p class="k r"><span class="n">07</span>Agent payments · FastAPI, Algorand</p>
     <h2 class="r">Agent spend policy engine</h2>
     <p class="lead r">Decides whether an AI agent may pay, before any money moves.</p>
     <p class="b r">Approved payments settle for real over x402 on Algorand testnet. Every decision, allowed or blocked, is hash-chained into a log whose latest hash is written on-chain, so the operator can't quietly rewrite history. The dashboard has a button that tampers with a record so you can watch verification catch it.</p>
@@ -170,7 +154,7 @@
 
 <section class="s" id="upstream" data-name="Open source">
   <div class="c">
-    <p class="k r"><span class="n">09</span>Open source</p>
+    <p class="k r"><span class="n">08</span>Open source</p>
     <h2 class="r">Upstream</h2>
     <p class="lead r">Small fixes in other people's large codebases.</p>
     <ul class="up r">
@@ -185,7 +169,7 @@
 
 <section class="s end" id="contact" data-name="Contact">
   <div class="c">
-    <p class="k r"><span class="n">10</span>Contact</p>
+    <p class="k r"><span class="n">09</span>Contact</p>
     <h2 class="r">Check my work.</h2>
     <p class="b r">If a number here doesn't reproduce, I want to know. I'm also open to internships and research work in ML and systems.</p>
     <p class="big r"><a href="mailto:jitheswaredu@gmail.com">jitheswaredu@gmail.com</a></p>
@@ -196,6 +180,6 @@
 
 </main>
 
-<script src="main.js?v=3" defer></script>
+<script src="main.js?v=4" defer></script>
 </body>
 </html>

@@ -127,12 +127,6 @@
       },
       a: (x, y, z) => box((x + y) * 0.7071, (x - y) * 0.7071, z, 0, 0, 0, 0.98, 0.055, 0.19) < 0.03,
     },
-    { // operating system: layers, the AI one on top
-      rot: [0.5, 0.62],
-      d: (x, y, z) => mn(box(x, y, z, 0, -0.56, 0, 0.86, 0.05, 0.86), box(x, y, z, 0, -0.2, 0, 0.72, 0.05, 0.72),
-        box(x, y, z, 0, 0.16, 0, 0.58, 0.05, 0.58), box(x, y, z, 0, 0.56, 0, 0.3, 0.09, 0.3)),
-      a: (x, y) => y > 0.38,
-    },
     { // compiler: a syntax tree with one path lit
       rot: [0.1, -0.42],
       d: (x, y, z) => treeD(x, y, z, false),
